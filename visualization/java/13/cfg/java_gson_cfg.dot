@@ -1,0 +1,29 @@
+digraph {
+  compound=true;
+  0[label="{ ... }"; ];
+  1[label="... && ..."; ];
+  2[label="return ..."; ];
+  3[label="checkOffset"; ];
+  4[label="offset"; ];
+  5[label="... < ..."; ];
+  6[label="value"; ];
+  7[label="... == ..."; ];
+  8[label="value"; ];
+  9[label="length(...)"; ];
+  10[label="charAt(...)"; ];
+  11[label="expected"; ];
+  12[label="offset"; ];
+  0 -> 1[];
+  1 -> 4[];
+  2 -> 3[];
+  4 -> 8[];
+  5 -> 2[];
+  5 -> 6[];
+  6 -> 12[];
+  7 -> 2[];
+  8 -> 9[];
+  9 -> 5[];
+  10 -> 11[];
+  11 -> 7[];
+  12 -> 10[];
+}
