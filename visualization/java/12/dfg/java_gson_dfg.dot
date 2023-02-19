@@ -1,0 +1,27 @@
+digraph {
+  compound=true;
+  0[label="value"; ];
+  1[label="value"; ];
+  2[label="parameter this"; ];
+  3[label="this <.method>"; ];
+  4[label="this <.method> [post update]"; ];
+  5[label="jsonWriter [post update]"; ];
+  6[label="jsonWriter"; ];
+  7[label="value [post update]"; ];
+  8[label="new JsonTreeWriter(...)"; ];
+  9[label="jsonWriter"; ];
+  10[label="get(...)"; ];
+  0 -> 1[];
+  1 -> 0[];
+  2 -> 3[];
+  4 -> 2[];
+  4 -> 3[];
+  5 -> 6[];
+  7 -> 0[];
+  7 -> 1[];
+  8 -> 9[];
+  8 -> 6[];
+  9 -> 6[];
+  10 -> 0[];
+  10 -> 1[];
+}
