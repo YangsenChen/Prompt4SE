@@ -1,0 +1,676 @@
+@SuppressWarnings("unchecked")
+  public static <E extends Comparable<? super E>> ImmutableSortedMultiset<E> of(
+      E e1, E e2, E e3, E e4, E e5, E e6, E... remaining) {
+    int size = remaining.length + 6;
+    List<E> all = Lists.newArrayListWithCapacity(size);
+    Collections.addAll(all, e1, e2, e3, e4, e5, e6);
+    Collections.addAll(all, remaining);
+    return copyOf(Ordering.natural(), all);
+  }
+public static <K, V1, V2> Map<K, V2> transformValues(
+      Map<K, V1> fromMap, Function<? super V1, V2> function) {
+    return transformEntries(fromMap, asEntryTransformer(function));
+  }
+@CanIgnoreReturnValue
+  @Override
+  public int remove(@Nullable Object element, int occurrences) {
+    if (element == null || !isActuallyE(element)) {
+      return 0;
+    }
+    Enum<?> e = (Enum<?>) element;
+    checkNonnegative(occurrences, "occurrences");
+    if (occurrences == 0) {
+      return count(element);
+    }
+    int index = e.ordinal();
+    int oldCount = counts[index];
+    if (oldCount == 0) {
+      return 0;
+    } else if (oldCount <= occurrences) {
+      counts[index] = 0;
+      distinctElements--;
+      size -= oldCount;
+    } else {
+      counts[index] = oldCount - occurrences;
+      size -= occurrences;
+    }
+    return oldCount;
+  }
+public void visitParameter(String name, int access) {
+        if (api < Opcodes.ASM5) {
+            throw new RuntimeException();
+        }
+        if (mv != null) {
+            mv.visitParameter(name, access);
+        }
+    }
+public static BufferedOutputStream buff(OutputStream ops) {
+        if (ops == null)
+            throw new NullPointerException("ops is null!");
+        if (ops instanceof BufferedOutputStream)
+            return (BufferedOutputStream) ops;
+        return new BufferedOutputStream(ops);
+    }
+private void checkForUnexpectedCommandParameter(List<String> messages) {
+        if (COMMANDS.UPDATE_COUNT.equalsIgnoreCase(command)
+                || COMMANDS.UPDATE_COUNT_SQL.equalsIgnoreCase(command)
+                || COMMANDS.UPDATE_TO_TAG.equalsIgnoreCase(command)
+                || COMMANDS.UPDATE_TO_TAG_SQL.equalsIgnoreCase(command)
+                || COMMANDS.CALCULATE_CHECKSUM.equalsIgnoreCase(command)
+                || COMMANDS.DB_DOC.equalsIgnoreCase(command)
+                || COMMANDS.TAG.equalsIgnoreCase(command)
+                || COMMANDS.TAG_EXISTS.equalsIgnoreCase(command)) {
+
+            if ((!commandParams.isEmpty()) && commandParams.iterator().next().startsWith("-")) {
+                messages.add(coreBundle.getString(ERRORMSG_UNEXPECTED_PARAMETERS) + commandParams);
+            }
+        } else if (COMMANDS.STATUS.equalsIgnoreCase(command)
+                || COMMANDS.UNEXPECTED_CHANGESETS.equalsIgnoreCase(command)) {
+            if ((!commandParams.isEmpty())
+                    && !commandParams.iterator().next().equalsIgnoreCase("--" + OPTIONS.VERBOSE)) {
+                messages.add(coreBundle.getString(ERRORMSG_UNEXPECTED_PARAMETERS) + commandParams);
+            }
+        } else if (COMMANDS.DIFF.equalsIgnoreCase(command)
+                || COMMANDS.DIFF_CHANGELOG.equalsIgnoreCase(command)) {
+            if ((!commandParams.isEmpty())) {
+                for (String cmdParm : commandParams) {
+                    if (!cmdParm.startsWith("--" + OPTIONS.REFERENCE_USERNAME)
+                            && !cmdParm.startsWith("--" + OPTIONS.REFERENCE_PASSWORD)
+                            && !cmdParm.startsWith("--" + OPTIONS.REFERENCE_DRIVER)
+                            && !cmdParm.startsWith("--" + OPTIONS.REFERENCE_DEFAULT_CATALOG_NAME)
+                            && !cmdParm.startsWith("--" + OPTIONS.REFERENCE_DEFAULT_SCHEMA_NAME)
+                            && !cmdParm.startsWith("--" + OPTIONS.INCLUDE_SCHEMA)
+                            && !cmdParm.startsWith("--" + OPTIONS.INCLUDE_CATALOG)
+                            && !cmdParm.startsWith("--" + OPTIONS.INCLUDE_TABLESPACE)
+                            && !cmdParm.startsWith("--" + OPTIONS.SCHEMAS)
+                            && !cmdParm.startsWith("--" + OPTIONS.OUTPUT_SCHEMAS_AS)
+                            && !cmdParm.startsWith("--" + OPTIONS.REFERENCE_SCHEMAS)
+                            && !cmdParm.startsWith("--" + OPTIONS.REFERENCE_URL)
+                            && !cmdParm.startsWith("--" + OPTIONS.EXCLUDE_OBJECTS)
+                            && !cmdParm.startsWith("--" + OPTIONS.INCLUDE_OBJECTS)
+                            && !cmdParm.startsWith("--" + OPTIONS.DIFF_TYPES)) {
+                        messages.add(String.format(coreBundle.getString("unexpected.command.parameter"), cmdParm));
+                    }
+                }
+            }
+        } else if ((COMMANDS.SNAPSHOT.equalsIgnoreCase(command)
+                || COMMANDS.GENERATE_CHANGELOG.equalsIgnoreCase(command)
+        )
+                && (!commandParams.isEmpty())) {
+            for (String cmdParm : commandParams) {
+                if (!cmdParm.startsWith("--" + OPTIONS.INCLUDE_SCHEMA)
+                        && !cmdParm.startsWith("--" + OPTIONS.INCLUDE_CATALOG)
+                        && !cmdParm.startsWith("--" + OPTIONS.INCLUDE_TABLESPACE)
+                        && !cmdParm.startsWith("--" + OPTIONS.SCHEMAS)) {
+                    messages.add(String.format(coreBundle.getString("unexpected.command.parameter"), cmdParm));
+                }
+            }
+        }
+
+    }
+public ColumnConfig setValueDate(String valueDate) throws DateParseException {
+        if ((valueDate == null) || "null".equalsIgnoreCase(valueDate)) {
+            this.valueDate = null;
+        } else if (NowAndTodayUtil.isNowOrTodayFormat(valueDate)) {
+            this.valueDate = NowAndTodayUtil.doNowOrToday(valueDate, this.getType());
+        } else {
+            try {
+                this.valueDate = new ISODateFormat().parse(valueDate);
+            } catch (ParseException e) {
+                //probably a function
+                this.valueComputed = new DatabaseFunction(valueDate);
+            }
+        }
+
+        return this;
+    }
+public static synchronized void install(AbstractConfiguration config) throws IllegalStateException {
+        if (!customConfigurationInstalled) {
+            setDirect(config);
+            if (DynamicPropertyFactory.getBackingConfigurationSource() != config) {
+                DynamicPropertyFactory.initWithConfigurationSource(config);
+            }
+        } else {
+            throw new IllegalStateException("A non-default configuration is already installed");
+        }
+    }
+private OMElement efetuaConsultaStatusBahia(final OMElement omElement) throws RemoteException {
+        final NfeStatusServicoStub.NfeCabecMsg cabec = new NfeStatusServicoStub.NfeCabecMsg();
+        cabec.setCUF(DFUnidadeFederativa.BA.getCodigoIbge());
+        cabec.setVersaoDados(this.config.getVersao());
+
+        final NfeStatusServicoStub.NfeCabecMsgE cabecEnv = new NfeStatusServicoStub.NfeCabecMsgE();
+        cabecEnv.setNfeCabecMsg(cabec);
+
+        final NfeStatusServicoStub.NfeDadosMsg dados = new NfeStatusServicoStub.NfeDadosMsg();
+        dados.setExtraElement(omElement);
+
+        final NFAutorizador31 autorizador = NFAutorizador31.valueOfCodigoUF(DFUnidadeFederativa.BA);
+        final String endpoint = autorizador.getNfeStatusServico(this.config.getAmbiente());
+        if (endpoint == null) {
+            throw new IllegalArgumentException("Nao foi possivel encontrar URL para StatusServico " + DFModelo.NFE.name() + ", autorizador " + autorizador.name() + ", UF " + DFUnidadeFederativa.BA.name());
+        }
+
+        return new NfeStatusServicoStub(endpoint).nfeStatusServicoNF(dados, cabecEnv).getExtraElement();
+    }
+public static String formatMsg(String msg) {
+        msg = msg.replace("&lt;", "<")
+                .replace("&gt;", ">")
+                .replace("<br/>", "\n");
+        return emojiParse(msg);
+    }
+public static boolean isBeginGroupKey(RenderingHints.Key key) {
+        return SVGHints.KEY_BEGIN_GROUP.equals(key)
+                || beginGroupKeys.contains(key);
+    }
+public static void setInputFormat(Class<?> realInputFormatClass, Job job) {
+    job.setInputFormatClass(MapReduceInputFormatWrapper.class);
+    setWrappedInputFormat(realInputFormatClass, HadoopCompat.getConfiguration(job));
+  }
+public <T> void resubscribe(TaggedObserver<? super T> observer, String observableTag) {
+    final Observable<T> observable = observable(observer, observableTag);
+    if (observable != null) {
+      observable.subscribe(observer);
+    }
+  }
+@Override
+  public DoubleAssert isNotEqualTo(Double expected) {
+    doubles.assertNotEqual(description, actual, expected);
+    return this;
+  }
+public final void removeWebSocketPushListener(final String sessionId) {
+
+        final WebSocketPushListener removed = sessionIdWsListeners
+                .remove(sessionId);
+        wsListeners.remove(removed);
+        wsListener = wsListeners.peek();
+    }
+@Override
+    public Boolean slExists(byte[] key, byte[] field, byte[] name, byte[] value) {
+        try {
+            if (isPipelined()) {
+                pipeline(new JedisResult(pipeline.slexists(key, field, name, value)));
+                return null;
+            }
+
+            return this.client.slexists(key, field, name, value);
+        } catch (Exception ex) {
+            throw convertException(ex);
+        }
+    }
+public static Set<ResourceType> of(final ResourceType first, final ResourceType... rest) {
+        final Set<ResourceType> set = new HashSet<>();
+        set.add(first);
+        set.addAll(Arrays.asList(rest));
+        return set;
+    }
+@Override
+        public void onClick(View v) {
+
+                // Show a progress bar...
+                final ProgressDialog progress = progressDialogFactory.show(context, I18NConstants.DLG_SETTINGS, I18NConstants.PLEASE_WAIT);
+
+                // Get the updated info
+                UserSettings profile = new UserSettings();
+                profile.setFirstName(view.getFirstNameEdit().getText().toString().trim());
+                profile.setLastName(view.getLastNameEdit().getText().toString().trim());
+
+
+                // Settings will only be changed if the image was altered
+                // See ProfileView#onImageChange
+                Drawable imageOn = view.getProfilePictureEditView().getProfileImage();
+
+                if(imageOn instanceof BitmapDrawable) {
+                        profile.setImage(((BitmapDrawable)imageOn).getBitmap());
+                }
+
+                if(view.getAutoPostFacebook() != null) {
+                        profile.setAutoPostFacebook(view.getAutoPostFacebook().isChecked());
+                }
+
+                if(view.getAutoPostTwitter() != null) {
+                        profile.setAutoPostTwitter(view.getAutoPostTwitter().isChecked());
+                }
+
+                if(view.getNotificationsEnabledCheckbox() != null) {
+                        profile.setNotificationsEnabled(view.getNotificationsEnabledCheckbox().isChecked());
+                }
+
+                if(view.getLocationEnabledCheckbox() != null) {
+                        profile.setLocationEnabled(view.getLocationEnabledCheckbox().isChecked());
+                }
+
+                profileSaver.save(context, profile, new UserSaveListener() {
+
+                        @Override
+                        public void onError(SocializeException error) {
+                                progress.dismiss();
+
+                                if(errorHandler != null) {
+                                        errorHandler.handleError(context, error);
+                                }
+                        }
+
+                        @Override
+                        public void onUpdate(User entity) {
+                                progress.dismiss();
+                                context.setResult(CommentActivity.PROFILE_UPDATE);
+                                context.finish();
+                        }
+                });
+        }
+@Override
+        public void executeDemo(String text) {
+
+                ActionUtils.getActionsByEntity(this, entity.getKey(), 0, PAGE_SIZE, new ActionListListener() {
+
+                        @Override
+                        public void onList(ListResult<SocializeAction> result) {
+                                handleSocializeResult(result);
+                        }
+
+                        @Override
+                        public void onError(SocializeException error) {
+                                handleError(GetActionsByEntityActivity.this, error);
+                        }
+                });
+        }
+@Cached
+    @DontLabel
+    public Rule charRange(final char cLow, final char cHigh)
+    {
+        return cLow == cHigh ? ch(cLow) : new CharRangeMatcher(cLow, cHigh);
+    }
+public void onBind(B binding, E item, int position, List<Object> payloads) {
+        onBind(binding, item, position);
+    }
+@BackpressureSupport(BackpressureKind.FULL)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public final void blockingSubscribe(Consumer<? super T> onNext, Consumer<? super Throwable> onError, Action onComplete,
+        int bufferSize) {
+        FlowableBlockingSubscribe.subscribe(this, onNext, onError, onComplete, bufferSize);
+    }
+public static void trustStore(String pathToJks, String password) {
+        Validate.notEmpty(password, "Password cannot be empty");
+        applyTrustStore(pathToJks, password);
+    }
+public static void registerCustomSerializer(CommandCode code, CustomSerializer serializer) {
+        CustomSerializer prevSerializer = commandCustomSerializer.putIfAbsent(code, serializer);
+        if (prevSerializer != null) {
+            throw new RuntimeException("CustomSerializer has been registered for command code: "
+                                       + code + ", the custom serializer is: "
+                                       + prevSerializer.getClass().getName());
+        }
+    }
+@Deprecated
+  public <T> T withTransaction(String name, boolean readOnly, Supplier<T> block) {
+    return withTransaction(
+        name,
+        readOnly,
+        entityManager -> {
+          return block.get();
+        });
+  }
+public static Result temporaryRedirect(Call call) {
+    return new Result(TEMPORARY_REDIRECT, Collections.singletonMap(LOCATION, call.path()));
+  }
+public static String encodeHost(final String host, final String encoding) {
+                return encodeUriComponent(host, encoding, URIPart.HOST);
+        }
+public static URL[] of(ClassLoader classLoader, Class clazz) {
+                if (clazz == null) {
+                        clazz = ClassPathURLs.class;
+                }
+                if (classLoader == null) {
+                        classLoader = clazz.getClassLoader();
+                }
+                final Set<URL> urls = new LinkedHashSet<>();
+
+                while (classLoader != null) {
+                        if (classLoader instanceof URLClassLoader) {
+                                final URLClassLoader urlClassLoader = (URLClassLoader) classLoader;
+                                return urlClassLoader.getURLs();
+                        }
+
+                        final URL url = classModuleUrl(classLoader, clazz);
+
+                        if (url != null) {
+                                urls.add(url);
+                        }
+
+                        classLoader = classLoader.getParent();
+                }
+
+                return urls.toArray(new URL[0]);
+        }
+private boolean argumentMatches(String classType, String propertyType) {
+        return (classType.equals(propertyType))
+                || (classType.equals("java.lang.Byte") && propertyType.equals("byte"))
+                || (classType.equals("java.lang.Short") && propertyType.equals("short"))
+                || (classType.equals("java.lang.Integer") && propertyType.equals("int"))
+                || (classType.equals("java.lang.Long") && propertyType.equals("long"))
+                || (classType.equals("java.lang.Float") && propertyType.equals("float"))
+                || (classType.equals("java.lang.Double") && propertyType.equals("double"))
+                || (classType.equals("java.lang.Boolean") && propertyType.equals("boolean"))
+                || (classType.equals("java.lang.Character") && propertyType.equals("char"));
+    }
+@Override
+    public void unbind(String name) {
+        if (name == null || name.isEmpty()) {
+            throw MessagingLogger.ROOT_LOGGER.cannotUnbindJndiName();
+        }
+        final ContextNames.BindInfo bindInfo = ContextNames.bindInfoFor(name);
+        ServiceController<?> bindingService = container.getService(bindInfo.getBinderServiceName());
+        if (bindingService == null) {
+            ROOT_LOGGER.debugf("Cannot unbind %s since no binding exists with that name", name);
+            return;
+        }
+        // remove the binding service
+        bindingService.setMode(ServiceController.Mode.REMOVE);
+        final StabilityMonitor monitor = new StabilityMonitor();
+        monitor.addController(bindingService);
+        try {
+            monitor.awaitStability();
+            ROOT_LOGGER.unboundJndiName(bindInfo.getAbsoluteJndiName());
+        } catch (InterruptedException e) {
+            ROOT_LOGGER.failedToUnbindJndiName(name, 5, SECONDS.toString().toLowerCase(Locale.US));
+        } finally {
+            monitor.removeController(bindingService);
+        }
+    }
+private void createWebAppDescriptor(final Deployment dep, final JBossWebMetaData jbossWebMD) {
+        WSLogger.ROOT_LOGGER.trace("Creating web.xml descriptor");
+        createServlets(dep, jbossWebMD);
+        createServletMappings(dep, jbossWebMD);
+        createSecurityConstraints(dep, jbossWebMD);
+        createLoginConfig(dep, jbossWebMD);
+        createSecurityRoles(dep, jbossWebMD);
+    }
+public OHttpResponseWrapper writeRecord(final ORecord iRecord, final String iFetchPlan) throws IOException {
+    response.writeRecord(iRecord, iFetchPlan, null);
+    return this;
+  }
+public ArrayList extract(String url) throws IOException {
+    if (debug) System.out.println(" URLextract=" + url);
+
+    baseURL = new URL(url);
+    InputStream in = baseURL.openStream();
+    InputStreamReader r = new InputStreamReader(filterTag(in), CDM.UTF8);
+    HTMLEditorKit.ParserCallback callback = new CallerBacker();
+
+    urlList = new ArrayList();
+    wantURLS = true;
+    wantText = false;
+    parser.parse(r, callback, false);
+
+    return urlList;
+  }
+public Clause translate()
+        throws DAP2ServerSideException, DAP2Exception,
+        NoSuchFunctionException, NoSuchVariableException
+    {
+        Clause clause = null;
+        if(boolfcn != null)
+            clause = boolfcn.translate();
+        else {
+            Vector<SubClause> cvtrhs = new Vector<SubClause>();
+            for(ASTvalue v : rhs) cvtrhs.addElement(v.translate());
+            SubClause lhsclause = lhs.translate();
+            clause = getClauseFactory().newRelOpClause(operator, lhsclause, cvtrhs);
+        }
+        return clause;
+    }
+private Grib1Record readRecord(Grib1IndexProto.Grib1Record p) {
+    Grib1SectionIndicator is = new Grib1SectionIndicator(p.getGribMessageStart(), p.getGribMessageLength());
+    Grib1SectionProductDefinition pds = new Grib1SectionProductDefinition(p.getPds().toByteArray());
+
+    Grib1SectionGridDefinition gds = pds.gdsExists() ? gdsList.get(p.getGdsIdx()) : new Grib1SectionGridDefinition(pds);
+    Grib1SectionBitMap bms = pds.bmsExists() ? new Grib1SectionBitMap(p.getBmsPos()) : null;
+
+    Grib1SectionBinaryData dataSection = new Grib1SectionBinaryData(p.getDataPos(), p.getDataLen());
+    return new Grib1Record(p.getHeader().toByteArray(), is, gds, pds, bms, dataSection);
+  }
+public static void forwardToCatalogServices(HttpServletRequest req, HttpServletResponse res)
+          throws IOException, ServletException {
+
+    String reqs = "catalog=" + getReletiveURL(req);
+    String query = req.getQueryString();
+    if (query != null)
+      reqs = reqs + "&" + query;
+    log.info("forwardToCatalogServices(): request string = \"/catalog.html?" + reqs + "\"");
+
+    // dispatch to CatalogHtml servlet
+    RequestForwardUtils.forwardRequestRelativeToCurrentContext("/catalog.html?" + reqs, req, res);
+  }
+private String socketAddressToString(SocketAddress address) {
+    String addr = address.toString();
+    int i = addr.indexOf("/");
+    if (i >= 0) {
+      addr = addr.substring(i + 1);
+    }
+    return addr;
+  }
+public void setIsOmit(boolean isOmit) {
+        Element child = getFirstChild(root, childNames);
+        boolean isAlreadyOmit = isDAVElement(child, "omit"); //$NON-NLS-1$
+        if (isOmit) {
+            if (!isAlreadyOmit) {
+                if (child != null)
+                    root.removeChild(child);
+                appendChild(root, "omit"); //$NON-NLS-1$
+            }
+        } else if (isAlreadyOmit)
+            root.removeChild(child);
+    }
+public static String dumpConstraints(final Constraint[] constraints) {
+        if ( constraints == null ) {
+            return null;
+        }
+        final StringBuffer buffer = new StringBuffer();
+        for ( int i = 0, length = constraints.length; i < length; i++ ) {
+            buffer.append( constraints[i].toString() + "<br>" );
+        }
+        return buffer.toString();
+    }
+protected Properties newConfigProperties() {
+    // default location is /WEB-INF/wro.properties
+    final Properties props = new Properties();
+    try {
+      return new ServletContextPropertyWroConfigurationFactory(Context.get().getServletContext()).createProperties();
+    } catch (final Exception e) {
+      LOG.warn("No configuration property file found. Using default values.", e);
+    }
+    return props;
+  }
+void process(Context context) {
+                activeContext_.set(context);
+                // at this point workerLocalTodo_ must be empty
+                workerLocalTodo_.setActiveRoot(context.getRoot());
+                for (;;) {
+                        ClassInference inference = workerLocalTodo_.poll();
+                        if (inference == null) {
+                                inference = context.takeToDo();
+                                if (inference == null)
+                                        return;
+                        }
+                        LOGGER_.trace("{}: processing inference {}", context, inference);
+                        inference.accept(inferenceProcessor_);
+                }
+        }
+public ActivityContextInterface getActivityContextInterface(
+                        ServiceActivity serviceActivityImpl) throws NullPointerException,
+                        TransactionRequiredLocalException, UnrecognizedActivityException,
+                        FactoryException {
+
+                ActivityContextHandle ach = new ServiceActivityContextHandle(new ServiceActivityHandleImpl(((ServiceActivityImpl) serviceActivityImpl).getServiceID()));
+                ActivityContext ac = sleeContainer.getActivityContextFactory().getActivityContext(ach);
+                if (ac == null) {
+                        throw new UnrecognizedActivityException(serviceActivityImpl);
+                }
+                return ac.getActivityContextInterface();
+
+        }
+@SuppressWarnings("rawtypes")
+        @Override
+        public List getSerListFromCtObjChart(final Object ctObjChart) {
+
+                if (ctObjChart instanceof CTBarChart) {
+                        return ((CTBarChart) ctObjChart).getSerList();
+                }
+                return emptySerlist;
+        }
+public float at (final float x)
+  {
+    if (m_nDataPoints < 2)
+      return Float.NaN;
+
+    float y = m_aDivDiff[0][0];
+    float xFactor = 1;
+
+    // Compute the value of the function.
+    for (int order = 1; order < m_nDataPoints; ++order)
+    {
+      xFactor = xFactor * (x - m_aData[order - 1].getX ());
+      y = y + xFactor * m_aDivDiff[0][order];
+    }
+
+    return y;
+  }
+public void finishTransfer(Properties properties)
+        {
+                if (DEBUG)
+                        System.out.println("Disconnecting");
+                try {
+                        if (m_client != null)
+                                m_client.disconnect();
+                } catch (IOException e) {
+                        e.printStackTrace();
+                }
+                m_client = null;
+                super.finishTransfer(properties);
+        }
+public static <E extends Sizeable> Queue<E> getAtomicCountedSizeableTransactionalReQueue(
+        java.util.Queue<E> queue, Collection<E> requeue)
+    {
+        return new WrapperQueue<E>(queue, requeue, true, true, true);
+    }
+public void visit(Predicate predicate)
+    {
+        if (traverser.isEnteringContext())
+        {
+            initializePrinters();
+        }
+        else if (traverser.isLeavingContext())
+        {
+            printTable();
+        }
+
+        super.visit(predicate);
+    }
+public T get(int index)
+    {
+        /*log.fine("public T get(int index): called");*/
+        /*log.fine("index = " + index);*/
+
+        // Turn the absolute index into a block and offset.
+        int block = index / blockSize;
+        int offset = index % blockSize;
+
+        /*log.fine("block = " + block);*/
+        /*log.fine("offset = " + offset);*/
+
+        // Check if the desired block is already cached.
+        List<T> blockList = blockMap.get(block);
+
+        // Fetch the block if it is not already cached and cache it.
+        if (blockList == null)
+        {
+            blockList = cacheBlock(block);
+        }
+
+        // Get the element from the offset within the cached block.
+        return blockList.get(offset);
+    }
+@Override
+    public boolean enter(RuleSetNode ruleSetNode) {
+
+        ScopeNode scopeNode = NodeTreeUtils.getFirstChild(ruleSetNode, ScopeNode.class);
+        SelectorGroupNode selectorGroupNode = NodeTreeUtils.getFirstChild(ruleSetNode, SelectorGroupNode.class);
+
+        if (selectorGroupNode == null) {
+            return true;
+        }
+
+        List<SelectorNode> selectorNodes = NodeTreeUtils.getChildren(selectorGroupNode, SelectorNode.class);
+
+        if (selectorNodes.size() < 0) {
+            return true;
+        }
+
+        List<MediaQueryNode> mediaQueryNodes = NodeTreeUtils.getAndRemoveChildren(scopeNode, MediaQueryNode.class);
+
+        for (MediaQueryNode mediaQueryNode : mediaQueryNodes) {
+            ScopeNode mediaScopeNode = NodeTreeUtils.getFirstChild(mediaQueryNode, ScopeNode.class);
+
+            List<RuleSetNode> nestedRuleSets = NodeTreeUtils.getAndRemoveChildren(mediaScopeNode, RuleSetNode.class);
+
+            // if scope node for media query has anything more but whitespaces and rule sets than wrap it with rule set with the same selector group as outer rule set has
+            if (mediaScopeNode.getChildren().size() > NodeTreeUtils.getChildren(mediaScopeNode, WhiteSpaceCollectionNode.class).size()) {
+                RuleSetNode newRuleSetNode = new RuleSetNode();
+                ScopeNode newScopeNode = new ScopeNode();
+                newRuleSetNode.addChild(selectorGroupNode.clone());
+                newRuleSetNode.addChild(newScopeNode);
+
+                NodeTreeUtils.moveChildren(mediaScopeNode, newScopeNode);
+
+                mediaScopeNode.clearChildren();
+                mediaScopeNode.addChild(newRuleSetNode);
+            }
+
+            // adding outer selectors to every nested selectors
+            for (RuleSetNode nestedRuleSet : nestedRuleSets) {
+                List<SelectorGroupNode> nestedSelectorGroupNodes = NodeTreeUtils.getChildren(nestedRuleSet, SelectorGroupNode.class);
+
+                for (SelectorGroupNode nestedSelectorGroupNode : nestedSelectorGroupNodes) {
+                    List<SelectorNode> nestedSelectorNodes = NodeTreeUtils.getAndRemoveChildren(nestedSelectorGroupNode, SelectorNode.class);
+                    NodeTreeUtils.getAndRemoveChildren(nestedSelectorGroupNode, SpacingNode.class);
+
+                    for (SelectorNode selectorNode : selectorNodes) {
+                        for (SelectorNode nestedSelectorNode : nestedSelectorNodes) {
+                            if (nestedSelectorNode.getChildren().get(0) != null) {
+                                if (nestedSelectorNode.getChildren().get(0) instanceof SelectorSegmentNode) {
+                                    SelectorSegmentNode selectorSegmentNode = (SelectorSegmentNode) nestedSelectorNode.getChildren().get(0);
+                                    selectorSegmentNode.setCombinator(" ");
+                                }
+                            }
+
+                            for (int j = selectorNode.getChildren().size() - 1; j >= 0; j--) {
+                                if (selectorNode.getChildren().get(j) instanceof SelectorSegmentNode) {
+                                    SelectorSegmentNode selectorSegmentNode = (SelectorSegmentNode) selectorNode.getChildren().get(j).clone();
+
+                                    nestedSelectorNode.addChild(0, selectorSegmentNode);
+                                }
+                            }
+
+                            nestedSelectorGroupNode.addChild(nestedSelectorNode);
+                            nestedSelectorGroupNode.addChild(new SpacingNode(" "));
+                        }
+                    }
+                }
+                mediaScopeNode.addChild(nestedRuleSet);
+            }
+
+            if (ruleSetNode.getParent() != null) {
+                ruleSetNode.getParent().addChild(new SpacingNode("\n"));
+                ruleSetNode.getParent().addChild(mediaQueryNode);
+            }
+        }
+
+        return true;
+    }
+private static <K,V> Node<K,V> getRightChild(final Node<K,V> node, final int index) {
+
+        return (node == null)
+               ? null
+               : node.getRight(index);
+    }
