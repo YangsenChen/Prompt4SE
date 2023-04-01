@@ -5,7 +5,7 @@ import re
 folder_path = "chat_history"
 
 # Define the name of the output file
-output_file = "result.md"
+output_file = "readme.md"
 
 # Initialize an empty string to store the extracted content
 combined_content = ""

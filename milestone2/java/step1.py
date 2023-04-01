@@ -32,9 +32,6 @@ for file_number in range(28, 51):
     '''append three unit test methods inside the Main class.\n each test method should start with @test''')
 
 
-
-
-
     # Replace "your_api_key_here" with your actual API key
     openai.api_key = "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"
 

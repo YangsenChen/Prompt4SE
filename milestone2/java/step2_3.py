@@ -9,7 +9,7 @@ success_count = 0
 fail_count = 0
 total_tests_passed = 0
 total_tests_attempted = 0
-
+success_files = []
 # Loop through the markdown files (1.md to 50.md)
 for i in range(1, 51):
     file_name = f"{i}.md"
@@ -27,8 +27,12 @@ for i in range(1, 51):
         # If the result section is found, count success and fail occurrences
         if result_section:
             extracted_content = result_section.group(0)
-            success_count += len(re.findall(r"(success|succeed)", extracted_content, re.IGNORECASE))
-            fail_count += len(re.findall(r"fail", extracted_content, re.IGNORECASE))
+
+            if len(re.findall(r"(success|succeed)", extracted_content, re.IGNORECASE)) >= 1:
+                success_count += 1
+                success_files.append(file_name)
+            else:
+                fail_count += len(re.findall(r"fail", extracted_content, re.IGNORECASE))
 
             # Extract pass rates from successful results
             pass_rates = re.findall(r"(\d+)/(\d+)", extracted_content)
@@ -56,3 +60,4 @@ print(f"Success rate: {success_rate:.2f}%")
 print(f"Total tests passed: {total_tests_passed}")
 print(f"Total tests attempted: {total_tests_attempted}")
 print(f"Total test pass rate: {test_pass_rate:.2f}%")
+print(f"Success files: {success_files}")
