@@ -103,6 +103,46 @@ class FileProcessor {
         return true;
     }
 
+    // chatgpt generated  semantically equivalent code: test pass 0/3
+//    public boolean init(boolean fullCheck) throws IOException {
+//        if (rf == null) {
+//            throw new IOException("file has not been set");
+//        }
+//
+//        boolean labelOk = ((DMLabel) dmLabel).isLabelOk();
+//
+//        if (!labelOk) {
+//            logError("not a GEMPAK file");
+//            return false;
+//        }
+//
+//        // Read the keys  (DM_RKEY)
+//        if (!readKeys()) {
+//            logError("Couldn't read keys");
+//            return false;
+//        }
+//
+//        // Read the headers (DM_RHDA)
+//        if (!readHeaders()) {
+//            logError("Couldn't read headers");
+//            return false;
+//        }
+//
+//        // Read the parts (DM_RPRT)
+//        if (!readParts()) {
+//            logError("Couldn't read parts");
+//            return false;
+//        }
+//
+//        // Read the file header info (DM_RFIL)
+//        if (!readFileHeaderInfo()) {
+//            logError("Couldn't read file header info");
+//            return false;
+//        }
+//
+//        return true;
+//    }
+
     private void logError(String s) {
         System.err.println(s);
     }

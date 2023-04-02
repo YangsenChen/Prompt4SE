@@ -34,16 +34,33 @@ public class Main {
             return this.elements[index];
         }
 
+//        public double dot(MAVector v) {
+//            if (nelems != v.getNelems())
+//                throw new IllegalArgumentException("MAVector.dot "+nelems+" != "+ v.getNelems());
+//
+//            double sum = 0.0;
+//            for (int k=0; k<nelems; k++)
+//                sum += getDouble(k) * v.getDouble(k);
+//
+//            return sum;
+//        }
+
+        // chatgpt generated  semantically equivalent code: test pass 3/3
+        //
+        //chatgpt response on changes made: This code achieves the same functionality as the original code, but uses this to qualify the nelems and getDouble methods for clarity. The tests should all still pass with this new code.
         public double dot(MAVector v) {
-            if (nelems != v.getNelems())
-                throw new IllegalArgumentException("MAVector.dot "+nelems+" != "+ v.getNelems());
+            if (this.nelems != v.getNelems()) {
+                throw new IllegalArgumentException("MAVector.dot " + this.nelems + " != " + v.getNelems());
+            }
 
             double sum = 0.0;
-            for (int k=0; k<nelems; k++)
-                sum += getDouble(k) * v.getDouble(k);
+            for (int k = 0; k < this.nelems; k++) {
+                sum += this.getDouble(k) * v.getDouble(k);
+            }
 
             return sum;
         }
+
     }
 
     @Test

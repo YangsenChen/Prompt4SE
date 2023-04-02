@@ -10,6 +10,21 @@ public class Main {
         Analytics.logEvent("UserLoggedIn");
     }
 
+    @Deprecated
+    static public void init(Application app, String applicationName, String clientApiKey, Analytics.DeviceEvent... contexts) {
+        init(app, applicationName, clientApiKey, false, false, contexts);
+    }
+
+//    produce semantically equivalent code for the code
+//    @Deprecated
+//    static public void init(Application app, String applicationName, String clientApiKey, Analytics.DeviceEvent[] contexts) {
+//        init(app, applicationName, clientApiKey, false, false, contexts);
+//    }
+//
+//    static public void init(Application app, String applicationName, String clientApiKey, boolean optOut, boolean optIn, Analytics.DeviceEvent[] contexts) {
+//        // implementation of the init method
+//    }
+
     @Test
     public void testInit() {
         // Create an Application object

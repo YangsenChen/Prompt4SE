@@ -33,6 +33,14 @@ public class Main {
         return int3(a, b, c);
     }
 
+//    // chatgpt generated  semantically equivalent code: test pass 1/3
+//    // chatgpt made the following change: Instead of reading one byte at a time, we read all three bytes into a byte array using the readFully method of RandomAccessFile. We then pass the three bytes to the existing int3 method, with a bit-wise AND operation to convert each byte to an unsigned integer.
+//    public static int int3(RandomAccessFile raf) throws IOException {
+//        byte[] bytes = new byte[3];
+//        raf.readFully(bytes);
+//        return int3(bytes[0] & 0xFF, bytes[1] & 0xFF, bytes[2] & 0xFF);
+//    }
+
     public static int int3(int a, int b, int c) {
         return ((a & 0xFF) << 16) | ((b & 0xFF) << 8) | (c & 0xFF);
     }

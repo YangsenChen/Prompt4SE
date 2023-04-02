@@ -79,6 +79,41 @@ public class Main {
         return a; // same
     }
 
+//    // chatgpt generated  semantically equivalent code: test pass 3/3
+//
+//    // chatgpt made the following change: This implementation first determines the visibility level of a and b by calling the getVisibility method. The visibility levels are then compared to determine which member is more visible. If a is more visible than b, it is returned. If b is more visible than a, it is returned. If they have the same visibility level, a is returned (which is the same as the original implementation).
+//    public static <T extends Member> T moreVisible(T a, T b) {
+//        int am = a.getModifiers();
+//        int bm = b.getModifiers();
+//
+//        // Determine the visibility level of a and b
+//        int av = getVisibility(am);
+//        int bv = getVisibility(bm);
+//
+//        // Compare the visibility levels
+//        if (av > bv) {
+//            return a;
+//        } else if (bv > av) {
+//            return b;
+//        } else {
+//            return a; // same
+//        }
+//    }
+//
+//    private static int getVisibility(int modifiers) {
+//        if (Modifier.isPublic(modifiers)) {
+//            return 2;
+//        } else if (Modifier.isProtected(modifiers)) {
+//            return 1;
+//        } else if (Modifier.isPrivate(modifiers)) {
+//            return 0;
+//        } else {
+//            return -1;
+//        }
+//    }
+
+
+
     private static boolean isPublic(int modifiers) {
         return Modifier.isPublic(modifiers);
     }

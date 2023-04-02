@@ -1,5 +1,6 @@
 import org.testng.annotations.Test;
 
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -21,6 +22,16 @@ public class Main {
         }
         return logger;
     }
+
+//    // chatgpt generated semantically equivalent code: test pass 3/3
+//    private static Logger createLog() {
+//        Class<?> clazz = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
+//        return loggers.computeIfAbsent(clazz, cls -> {
+//            Logger logger = Logger.getLogger(clazz.getName());
+//            logger.setLevel(Level.ALL);
+//            return logger;
+//        });
+//    }
 
 
     public static void main(String[] args) {

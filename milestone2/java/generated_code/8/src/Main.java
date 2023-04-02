@@ -13,25 +13,65 @@ public class Main {
         String columnName = convertPropertyNameToColumnName(propertyName);
         System.out.println("Column name: " + columnName);
     }
-
-    public static String convertPropertyNameToColumnName(final String propertyName) {
-        StringBuilder tableName = new StringBuilder(propertyName.length() * 2);
-
-        if (splitCamelCase) {
-            String convertedTableName = Format.fromCamelCase(propertyName, separatorChar);
-            tableName.append(convertedTableName);
-        } else {
-            tableName.append(propertyName);
-        }
-
-        if (!changeCase) {
-            return tableName.toString();
-        }
-
-        return uppercase ?
-                toUppercase(tableName).toString() :
-                toLowercase(tableName).toString();
-    }
+// produce semantically equivalent code for the code
+//    public static String convertPropertyNameToColumnName(final String propertyName) {
+//        StringBuilder tableName = new StringBuilder(propertyName.length() * 2);
+//
+//        if (splitCamelCase) {
+//            String convertedTableName = Format.fromCamelCase(propertyName, separatorChar);
+//            tableName.append(convertedTableName);
+//        } else {
+//            tableName.append(propertyName);
+//        }
+//
+//        if (!changeCase) {
+//            return tableName.toString();
+//        }
+//
+//        return uppercase ?
+//                toUppercase(tableName).toString() :
+//                toLowercase(tableName).toString();
+//    }
+//
+//    //
+//    public static String convertPropertyNameToColumnName(final String propertyName) {
+//        StringBuilder columnName = new StringBuilder(propertyName.length() * 2);
+//
+//        if (shouldSplitCamelCase()) {
+//            String convertedColumnName = Format.camelCaseToSeparator(propertyName, getColumnSeparatorChar());
+//            columnName.append(convertedColumnName);
+//        } else {
+//            columnName.append(propertyName);
+//        }
+//
+//        if (!shouldChangeCase()) {
+//            return columnName.toString();
+//        }
+//
+//        return shouldUppercaseColumn() ?
+//                columnName.toString().toUpperCase() :
+//                columnName.toString().toLowerCase();
+//    }
+//
+//    private static boolean shouldSplitCamelCase() {
+//        // Return the value of the original 'splitCamelCase' variable
+//        return splitCamelCase;
+//    }
+//
+//    private static boolean shouldChangeCase() {
+//        // Return the value of the original 'changeCase' variable
+//        return changeCase;
+//    }
+//
+//    private static char getColumnSeparatorChar() {
+//        // Return the value of the original 'separatorChar' variable
+//        return separatorChar;
+//    }
+//
+//    private static boolean shouldUppercaseColumn() {
+//        // Return the value of the original 'uppercase' variable
+//        return uppercase;
+//    }
 
     private static StringBuilder toUppercase(StringBuilder sb) {
         for (int i = 0; i < sb.length(); i++) {

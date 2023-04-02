@@ -18,6 +18,14 @@ public class Main {
         this.errorConverter = errorConverter;
     }
 
+    // equivalent code
+//    public void setErrorConverter(Converter<Map<String, String>, OAuth2Error> errorConverter) {
+//        if(errorConverter == null){
+//            throw new IllegalArgumentException("errorConverter cannot be null");
+//        }
+//        this.errorConverter = errorConverter;
+//    }
+
     public static void main(String[] args) {
 
         Main main = new Main();

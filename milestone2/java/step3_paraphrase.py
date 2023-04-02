@@ -1,12 +1,25 @@
 import openai
 import json
-from step3 import *
+from step3_paraphrase import *
+import re
 
 # file_number = input("Enter file number: ")
 
-test_pass_files =['4.md', '6.md', '7.md', '14.md', '18.md', '19.md', '28.md', '30.md', '31.md', '33.md', '36.md', '38.md', '39.md', '45.md', '49.md']
+def process_md_data(filename):
 
-for f in test_pass_files:
+    with open(filename, 'r') as file:
+        content = file.read()
+
+    parsed_data = re.split("## chatgpt:|## user:|## result", content)[1:-1]
+
+    formatted_data = []
+    for i, data in enumerate(parsed_data):
+        formatted_data.append({'role': 'user' if i % 2 == 0 else 'assistant', 'content': data.strip()})
+
+    return formatted_data
+
+for i in range(42, 51):
+    f = str(i) + '.md'
     file_number = f.split('.')[0]
     # read the JSON data from file
     markdown_name = './chat_history/%s.md' % file_number
@@ -46,8 +59,10 @@ for f in test_pass_files:
         return assistant_message
 
 
-    response = send_message_to_chatgpt("produce semantically equivalent code for %s" % original_string, conversation_history)
+    response = send_message_to_chatgpt("produce semantically equivalent code for %s" % original_string, [])
 
-    print(f)
-    print(response)
-    print("\n\n")
+    with open('semantic_equivalent/'+file_number+'.md', 'w') as file:
+        file.write(response)
+        print(f)
+        print(response)
+        print("\n\n")

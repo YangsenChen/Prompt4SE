@@ -104,6 +104,58 @@ public class Main {
         return result;
     }
 
+//    // chatgpt generated  semantically equivalent code: test pass 1/3
+//
+//    // chatgpt made the following change: Note that the only change made was in the second for loop where nextByte has been replaced with a call to advance() to read the next byte into curByte. This ensures that the code reads the next byte only when it is necessary to do so, rather than always reading the next byte at the beginning of the method.
+//    public static int peakNextBits(int n) throws IOException {
+//        if (n >= 8) {
+//            throw new IllegalArgumentException("N should be less than 8");
+//        }
+//
+//        if (nBit == 8) {
+//            advance();
+//
+//            if (curByte == -1) {
+//                return -1;
+//            }
+//        }
+//
+//        int[] bits = new int[16 - nBit];
+//        int cnt = 0;
+//
+//        for (int i = nBit; i < 8; i++) {
+//            bits[cnt++] = (curByte >> (7 - i)) & 0x1;
+//        }
+//
+//        for (int i = 0; i < 8; i++) {
+//            if (nBit + i >= 8) {
+//                advance();
+//
+//                if (curByte == -1) {
+//                    return -1;
+//                }
+//            }
+//
+//            bits[cnt++] = (curByte >> (7 - nBit - i)) & 0x1;
+//        }
+//
+//        int result = 0;
+//
+//        for (int i = 0; i < n; i++) {
+//            result <<= 1;
+//            result |= bits[i];
+//        }
+//
+//        nBit += n;
+//
+//        if (nBit >= 8) {
+//            advance();
+//        }
+//
+//        return result;
+//    }
+
+
     @Test
     public void testWithErrorSize() throws IOException {
         testWithErrorSize(10);

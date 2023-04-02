@@ -27,6 +27,17 @@ public class Main {
         return p;
     }
 
+//    // chatgpt generated  semantically equivalent code: test pass 3/3
+//    // chatgpt response on changes made: uses a simpler conditional expression to set the value of p. It first sets p to UNKNOWN, and then checks if i is within the range of valid indices for the ALL array. If it is, it sets p to the corresponding Profile instance from the array. The tests should all still pass with this new code.
+//    public static Profile forInt(int i) {
+//        Profile p = UNKNOWN;
+//        if (i > 0 && i <= ALL.length) {
+//            p = ALL[i-1];
+//        }
+//        return p;
+//    }
+
+
     @Test
     public void testForIntValidInput() {
         Profile profile = forInt(2);

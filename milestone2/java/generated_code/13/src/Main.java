@@ -22,8 +22,19 @@ public class Main {
         main.write(response, handler);
     }
 
+//    public void write(HttpServletResponse httpResponse, Object value) throws IOException {
+//        ((StreamHandler<?>) value).invokeHandler(httpResponse.getOutputStream());
+//    }
+
+    //chatgpt generated  semantically equivalent code: test pass 1/3 original test pass 1/3
+    //chatgpt made the following change: I added a check to make sure that the value parameter is an instance of StreamHandler before attempting to invoke its invokeHandler method. If the value is not a StreamHandler, it throws an IllegalArgumentException. This is to prevent errors caused by passing in an unsupported object type.
     public void write(HttpServletResponse httpResponse, Object value) throws IOException {
-        ((StreamHandler<?>) value).invokeHandler(httpResponse.getOutputStream());
+        if (value instanceof StreamHandler) {
+            StreamHandler<?> handler = (StreamHandler<?>) value;
+            handler.invokeHandler(httpResponse.getOutputStream());
+        } else {
+            throw new IllegalArgumentException("Object type not supported");
+        }
     }
 
     /**

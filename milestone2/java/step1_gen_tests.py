@@ -1,10 +1,14 @@
+# generates prompts to ask ChatGPT to generate test code.
+# extract original code and function name,
+# generates prompts, sends them to ChatGPT,
+# and records the conversation history to md files.
 
 import json
 import openai
 
 # file_number = input("Enter file number: ")
 
-for file_number in range(28, 51):
+for file_number in range(1, 51):
     file_number = str(file_number)
     # read the JSON data from file
     with open('dataset/'+file_number+'.json', 'r') as file:

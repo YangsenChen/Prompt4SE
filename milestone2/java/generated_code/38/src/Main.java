@@ -1,6 +1,7 @@
 import org.junit.Test;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,6 +19,16 @@ public class Main {
         java.util.logging.Logger.getLogger(Server.class.getCanonicalName()).log(Level.SEVERE, message);
         return message;
     }
+
+//    // chatgpt generated  semantically equivalent code: test pass 3/3
+//    // chatgpt made the following change: The only change made here is to store the Logger instance in a variable for better readability and maintainability.
+//    private static String log(String message, Object... args) {
+//        message = String.format(message, args);
+//        Logger logger = Logger.getLogger(Server.class.getCanonicalName());
+//        logger.severe(message);
+//        return message;
+//    }
+
 
     @Test
     public void testLog() {
