@@ -21,3 +21,18 @@ Run
 python script_to_reasonable.py
 ```
 under the current directory
+
+### Task 3
+equivalent_code_all.py can be used to reproduce the task3_all.md, which is the semantically equivalent code of 50 random methods
+Run
+```
+python equivalent_code_all.py
+```
+under the current directory
+
+equivalent_code_reasonable.py is used to produce the equivalent code for data under reasonable_dataset. I use the result to compute how many tests produced by task2 get the same results as the original code.
+Run
+```
+python equivalent_code_reasonable.py
+```
+under the current directory
