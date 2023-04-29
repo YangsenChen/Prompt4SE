@@ -1,0 +1,2205 @@
+def GetAnnotationObjects(self) -> list:
+        """
+        Call IUIAutomationSelectionPattern::GetCurrentAnnotationObjects.
+        Return list, a list of `Control` subclasses representing the annotations associated with this spreadsheet cell.
+        Refer https://docs.microsoft.com/en-us/windows/desktop/api/uiautomationclient/nf-uiautomationclient-iuiautomationspreadsheetitempattern-getcurrentannotationobjects
+        """
+        eleArray = self.pattern.GetCurrentAnnotationObjects()
+        if eleArray:
+            controls = []
+            for i in range(eleArray.Length):
+                ele = eleArray.GetElement(i)
+                con = Control.CreateControlFromElement(element=ele)
+                if con:
+                    controls.append(con)
+            return controls
+        return []
+def _get_tmaster_processes(self):
+    ''' get the command to start the tmaster processes '''
+    retval = {}
+    tmaster_cmd_lst = [
+        self.tmaster_binary,
+        '--topology_name=%s' % self.topology_name,
+        '--topology_id=%s' % self.topology_id,
+        '--zkhostportlist=%s' % self.state_manager_connection,
+        '--zkroot=%s' % self.state_manager_root,
+        '--myhost=%s' % self.master_host,
+        '--master_port=%s' % str(self.master_port),
+        '--controller_port=%s' % str(self.tmaster_controller_port),
+        '--stats_port=%s' % str(self.tmaster_stats_port),
+        '--config_file=%s' % self.heron_internals_config_file,
+        '--override_config_file=%s' % self.override_config_file,
+        '--metrics_sinks_yaml=%s' % self.metrics_sinks_config_file,
+        '--metricsmgr_port=%s' % str(self.metrics_manager_port),
+        '--ckptmgr_port=%s' % str(self.checkpoint_manager_port)]
+
+    tmaster_env = self.shell_env.copy() if self.shell_env is not None else {}
+    tmaster_cmd = Command(tmaster_cmd_lst, tmaster_env)
+    if os.environ.get('ENABLE_HEAPCHECK') is not None:
+      tmaster_cmd.env.update({
+          'LD_PRELOAD': "/usr/lib/libtcmalloc.so",
+          'HEAPCHECK': "normal"
+      })
+
+    retval["heron-tmaster"] = tmaster_cmd
+
+    if self.metricscache_manager_mode.lower() != "disabled":
+      retval["heron-metricscache"] = self._get_metrics_cache_cmd()
+
+    if self.health_manager_mode.lower() != "disabled":
+      retval["heron-healthmgr"] = self._get_healthmgr_cmd()
+
+    retval[self.metricsmgr_ids[0]] = self._get_metricsmgr_cmd(
+        self.metricsmgr_ids[0],
+        self.metrics_sinks_config_file,
+        self.metrics_manager_port)
+
+    if self.is_stateful_topology:
+      retval.update(self._get_ckptmgr_process())
+
+    return retval
+def get(self, cluster, environ, topology, instance):
+    '''
+    :param cluster:
+    :param environ:
+    :param topology:
+    :param instance:
+    :return:
+    '''
+    pplan = yield access.get_physical_plan(cluster, environ, topology)
+    host = pplan['stmgrs'][pplan['instances'][instance]['stmgrId']]['host']
+    result = json.loads((yield access.get_instance_pid(
+        cluster, environ, topology, instance)))
+    self.write('<pre><br/>$%s>: %s<br/><br/>%s</pre>' % (
+        host,
+        tornado.escape.xhtml_escape(result['command']),
+        tornado.escape.xhtml_escape(result['stdout'])))
+def register_metric(self, name, metric, time_bucket_in_sec):
+    """Registers a new metric to this context"""
+    collector = self.get_metrics_collector()
+    collector.register_metric(name, metric, time_bucket_in_sec)
+def wait_for_current_tasks(self):
+        """Waits for all tasks in the task list to be completed, by waiting for their
+        AppFuture to be completed. This method will not necessarily wait for any tasks
+        added after cleanup has started (such as data stageout?)
+        """
+
+        logger.info("Waiting for all remaining tasks to complete")
+        for task_id in self.tasks:
+            # .exception() is a less exception throwing way of
+            # waiting for completion than .result()
+            fut = self.tasks[task_id]['app_fu']
+            if not fut.done():
+                logger.debug("Waiting for task {} to complete".format(task_id))
+                fut.exception()
+        logger.info("All remaining tasks completed")
+def playstyles(year=2019, timeout=timeout):
+    """Return all playstyles in dict {id0: playstyle0, id1: playstyle1}.
+
+    :params year: Year.
+    """
+    rc = requests.get(messages_url, timeout=timeout)
+    rc.encoding = 'utf-8'  # guessing takes huge amount of cpu time
+    rc = rc.text
+    data = re.findall('"playstyles.%s.playstyle([0-9]+)": "(.+)"' % year, rc)
+    playstyles = {}
+    for i in data:
+        playstyles[int(i[0])] = i[1]
+    return playstyles
+def set_fee_asset(self, fee_asset):
+        """ Set asset to fee
+        """
+        if isinstance(fee_asset, self.amount_class):
+            self.fee_asset_id = fee_asset["id"]
+        elif isinstance(fee_asset, self.asset_class):
+            self.fee_asset_id = fee_asset["id"]
+        elif fee_asset:
+            self.fee_asset_id = fee_asset
+        else:
+            self.fee_asset_id = "1.3.0"
+def _build_admin_context(request, customer):
+        """
+        Build common admin context.
+        """
+        opts = customer._meta
+        codename = get_permission_codename('change', opts)
+        has_change_permission = request.user.has_perm('%s.%s' % (opts.app_label, codename))
+        return {
+            'has_change_permission': has_change_permission,
+            'opts': opts
+        }
+def cleanup(self, output):
+        """
+        Generates consistent OpenWRT/LEDE UCI output
+        """
+        # correct indentation
+        output = output.replace('    ', '')\
+                       .replace('\noption', '\n\toption')\
+                       .replace('\nlist', '\n\tlist')
+        # convert True to 1 and False to 0
+        output = output.replace('True', '1')\
+                       .replace('False', '0')
+        # max 2 consecutive \n delimiters
+        output = output.replace('\n\n\n', '\n\n')
+        # if output is present
+        # ensure it always ends with 1 new line
+        if output.endswith('\n\n'):
+            return output[0:-1]
+        return output
+def deserialize_organization(organization_dict):
+    """
+    Organization dict-to-object serialization
+    """
+    return models.Organization(
+        id=organization_dict.get('id'),
+        name=organization_dict.get('name', ''),
+        short_name=organization_dict.get('short_name', ''),
+        description=organization_dict.get('description', ''),
+        logo=organization_dict.get('logo', '')
+    )
+def image_plane_pix_grid_from_regular_grid(self, regular_grid):
+        """Calculate the image-plane pixelization from a regular-grid of coordinates (and its mask).
+
+        See *grid_stacks.SparseToRegularGrid* for details on how this grid is calculated.
+
+        Parameters
+        -----------
+        regular_grid : grids.RegularGrid
+            The grid of (y,x) arc-second coordinates at the centre of every image value (e.g. image-pixels).
+        """
+
+        pixel_scale = regular_grid.mask.pixel_scale
+
+        pixel_scales = ((regular_grid.masked_shape_arcsec[0] + pixel_scale) / (self.shape[0]),
+                        (regular_grid.masked_shape_arcsec[1] + pixel_scale) / (self.shape[1]))
+
+        return grids.SparseToRegularGrid(unmasked_sparse_grid_shape=self.shape, pixel_scales=pixel_scales,
+                                         regular_grid=regular_grid, origin=regular_grid.mask.centre)
+def tfa_templates_lclist(
+        lclist,
+        lcinfo_pkl=None,
+        outfile=None,
+        target_template_frac=0.1,
+        max_target_frac_obs=0.25,
+        min_template_number=10,
+        max_template_number=1000,
+        max_rms=0.15,
+        max_mult_above_magmad=1.5,
+        max_mult_above_mageta=1.5,
+        xieta_bins=20,
+        mag_bandpass='sdssr',
+        custom_bandpasses=None,
+        mag_bright_limit=10.0,
+        mag_faint_limit=12.0,
+        process_template_lcs=True,
+        template_sigclip=5.0,
+        template_interpolate='nearest',
+        lcformat='hat-sql',
+        lcformatdir=None,
+        timecols=None,
+        magcols=None,
+        errcols=None,
+        nworkers=NCPUS,
+        maxworkertasks=1000,
+):
+    '''This selects template objects for TFA.
+
+    Selection criteria for TFA template ensemble objects:
+
+    - not variable: use a poly fit to the mag-MAD relation and eta-normal
+      variability index to get nonvar objects
+
+    - not more than 10% of the total number of objects in the field or
+      `max_tfa_templates` at most
+
+    - allow shuffling of the templates if the target ends up in them
+
+    - nothing with less than the median number of observations in the field
+
+    - sigma-clip the input time series observations
+
+    - TODO: uniform sampling in tangent plane coordinates (we'll need ra and
+      decl)
+
+    This also determines the effective cadence that all TFA LCs will be binned
+    to as the template LC with the largest number of non-nan observations will
+    be used. All template LCs will be renormed to zero.
+
+    Parameters
+    ----------
+
+    lclist : list of str
+        This is a list of light curves to use as input to generate the template
+        set.
+
+    lcinfo_pkl : str or None
+        If provided, is a file path to a pickle file created by this function on
+        a previous run containing the LC information. This will be loaded
+        directly instead of having to re-run LC info collection.
+
+    outfile : str or None
+        This is the pickle filename to which the TFA template list will be
+        written to. If None, a default file name will be used for this.
+
+    target_template_frac : float
+        This is the fraction of total objects in lclist to use for the number of
+        templates.
+
+    max_target_frac_obs : float
+        This sets the number of templates to generate if the number of
+        observations for the light curves is smaller than the number of objects
+        in the collection. The number of templates will be set to this fraction
+        of the number of observations if this is the case.
+
+    min_template_number : int
+        This is the minimum number of templates to generate.
+
+    max_template_number : int
+        This is the maximum number of templates to generate. If
+        `target_template_frac` times the number of objects is greater than
+        `max_template_number`, only `max_template_number` templates will be
+        used.
+
+    max_rms : float
+        This is the maximum light curve RMS for an object to consider it as a
+        possible template ensemble member.
+
+    max_mult_above_magmad : float
+        This is the maximum multiplier above the mag-RMS fit to consider an
+        object as variable and thus not part of the template ensemble.
+
+    max_mult_above_mageta : float
+        This is the maximum multiplier above the mag-eta (variable index) fit to
+        consider an object as variable and thus not part of the template
+        ensemble.
+
+    mag_bandpass : str
+        This sets the key in the light curve dict's objectinfo dict to use as
+        the canonical magnitude for the object and apply any magnitude limits
+        to.
+
+    custom_bandpasses : dict or None
+        This can be used to provide any custom band name keys to the star
+        feature collection function.
+
+    mag_bright_limit : float or list of floats
+        This sets the brightest mag (in the `mag_bandpass` filter) for a
+        potential member of the TFA template ensemble. If this is a single
+        float, the value will be used for all magcols. If this is a list of
+        floats with len = len(magcols), the specific bright limits will be used
+        for each magcol individually.
+
+    mag_faint_limit : float or list of floats
+        This sets the faintest mag (in the `mag_bandpass` filter) for a
+        potential member of the TFA template ensemble. If this is a single
+        float, the value will be used for all magcols. If this is a list of
+        floats with len = len(magcols), the specific faint limits will be used
+        for each magcol individually.
+
+    process_template_lcs : bool
+        If True, will reform the template light curves to the chosen
+        time-base. If False, will only select light curves for templates but not
+        process them. This is useful for initial exploration of how the template
+        LC are selected.
+
+    template_sigclip : float or sequence of floats or None
+        This sets the sigma-clip to be applied to the template light curves.
+
+    template_interpolate : str
+        This sets the kwarg to pass to `scipy.interpolate.interp1d` to set the
+        kind of interpolation to use when reforming light curves to the TFA
+        template timebase.
+
+    lcformat : str
+        This is the `formatkey` associated with your light curve format, which
+        you previously passed in to the `lcproc.register_lcformat`
+        function. This will be used to look up how to find and read the light
+        curves specified in `basedir` or `use_list_of_filenames`.
+
+    lcformatdir : str or None
+        If this is provided, gives the path to a directory when you've stored
+        your lcformat description JSONs, other than the usual directories lcproc
+        knows to search for them in. Use this along with `lcformat` to specify
+        an LC format JSON file that's not currently registered with lcproc.
+
+    timecols : list of str or None
+        The timecol keys to use from the lcdict in calculating the features.
+
+    magcols : list of str or None
+        The magcol keys to use from the lcdict in calculating the features.
+
+    errcols : list of str or None
+        The errcol keys to use from the lcdict in calculating the features.
+
+    nworkers : int
+        The number of parallel workers to launch.
+
+    maxworkertasks : int
+        The maximum number of tasks to run per worker before it is replaced by a
+        fresh one.
+
+    Returns
+    -------
+
+    dict
+        This function returns a dict that can be passed directly to
+        `apply_tfa_magseries` below. It can optionally produce a pickle with the
+        same dict, which can also be passed to that function.
+
+    '''
+
+    try:
+        formatinfo = get_lcformat(lcformat,
+                                  use_lcformat_dir=lcformatdir)
+        if formatinfo:
+            (dfileglob, readerfunc,
+             dtimecols, dmagcols, derrcols,
+             magsarefluxes, normfunc) = formatinfo
+        else:
+            LOGERROR("can't figure out the light curve format")
+            return None
+    except Exception as e:
+        LOGEXCEPTION("can't figure out the light curve format")
+        return None
+
+    # override the default timecols, magcols, and errcols
+    # using the ones provided to the function
+    if timecols is None:
+        timecols = dtimecols
+    if magcols is None:
+        magcols = dmagcols
+    if errcols is None:
+        errcols = derrcols
+
+    LOGINFO('collecting light curve information for %s objects in list...' %
+            len(lclist))
+
+    #
+    # check if we have cached results for this run
+    #
+
+    # case where we provide a cache info pkl directly
+    if lcinfo_pkl and os.path.exists(lcinfo_pkl):
+
+        with open(lcinfo_pkl,'rb') as infd:
+            results = pickle.load(infd)
+
+    # case where we don't have an info pickle or an outfile
+    elif ((not outfile) and
+          os.path.exists('tfa-collected-lcfinfo-%s.pkl' % lcformat)):
+
+        with open('tfa-collected-lcfinfo-%s.pkl' % lcformat, 'rb') as infd:
+            results = pickle.load(infd)
+
+    # case where we don't have an info pickle but do have an outfile
+    elif (outfile and os.path.exists('tfa-collected-lcfinfo-%s-%s' %
+                                     (lcformat, os.path.basename(outfile)))):
+
+        with open(
+                'tfa-collected-lcinfo-%s-%s' %
+                (lcformat, os.path.basename(outfile)),
+                'rb'
+        ) as infd:
+            results = pickle.load(infd)
+
+    # case where we have to redo the LC info collection
+    else:
+
+        # first, we'll collect the light curve info
+        tasks = [(x, lcformat, lcformat,
+                  timecols, magcols, errcols,
+                  custom_bandpasses) for x in lclist]
+
+        pool = mp.Pool(nworkers, maxtasksperchild=maxworkertasks)
+        results = pool.map(_collect_tfa_stats, tasks)
+        pool.close()
+        pool.join()
+
+        # save these results so we don't have to redo if something breaks here
+        if not outfile:
+            with open('tfa-collected-lcinfo-%s.pkl' % lcformat,'wb') as outfd:
+                pickle.dump(results, outfd, pickle.HIGHEST_PROTOCOL)
+        else:
+            with open(
+                    'tfa-collected-lcinfo-%s-%s' %
+                    (lcformat, os.path.basename(outfile)),
+                    'wb'
+            ) as outfd:
+                pickle.dump(results, outfd, pickle.HIGHEST_PROTOCOL)
+
+    #
+    # now, go through the light curve information
+    #
+
+    # find the center RA and center DEC -> median of all LC RAs and DECs
+    all_ras = np.array([res['ra'] for res in results])
+    all_decls = np.array([res['decl'] for res in results])
+    center_ra = np.nanmedian(all_ras)
+    center_decl = np.nanmedian(all_decls)
+
+    outdict = {
+        'timecols':[],
+        'magcols':[],
+        'errcols':[],
+        'center_ra':center_ra,
+        'center_decl':center_decl,
+    }
+
+    # for each magcol, we'll generate a separate template list
+    for tcol, mcol, ecol in zip(timecols, magcols, errcols):
+
+        if '.' in tcol:
+            tcolget = tcol.split('.')
+        else:
+            tcolget = [tcol]
+
+
+        # these are the containers for possible template collection LC info
+        (lcmag, lcmad, lceta,
+         lcndet, lcobj, lcfpaths,
+         lcra, lcdecl) = [], [], [], [], [], [], [], []
+
+        outdict['timecols'].append(tcol)
+        outdict['magcols'].append(mcol)
+        outdict['errcols'].append(ecol)
+
+        # add to the collection of all light curves
+        outdict[mcol] = {'collection':{'mag':[],
+                                       'mad':[],
+                                       'eta':[],
+                                       'ndet':[],
+                                       'obj':[],
+                                       'lcf':[],
+                                       'ra':[],
+                                       'decl':[]}}
+
+        LOGINFO('magcol: %s, collecting prospective template LC info...' %
+                mcol)
+
+
+        # collect the template LCs for this magcol
+        for result in results:
+
+            # we'll only append objects that have all of these elements
+            try:
+
+                thismag = result['colorfeat'][mag_bandpass]
+                thismad = result[mcol]['mad']
+                thiseta = result[mcol]['eta_normal']
+                thisndet = result[mcol]['ndet']
+                thisobj = result['objectid']
+                thislcf = result['lcfpath']
+                thisra = result['ra']
+                thisdecl = result['decl']
+
+                outdict[mcol]['collection']['mag'].append(thismag)
+                outdict[mcol]['collection']['mad'].append(thismad)
+                outdict[mcol]['collection']['eta'].append(thiseta)
+                outdict[mcol]['collection']['ndet'].append(thisndet)
+                outdict[mcol]['collection']['obj'].append(thisobj)
+                outdict[mcol]['collection']['lcf'].append(thislcf)
+                outdict[mcol]['collection']['ra'].append(thisra)
+                outdict[mcol]['collection']['decl'].append(thisdecl)
+
+
+                # check if we have more than one bright or faint limit elem
+                if isinstance(mag_bright_limit, (list, tuple)):
+                    use_bright_maglim = mag_bright_limit[
+                        magcols.index(mcol)
+                    ]
+                else:
+                    use_bright_maglim = mag_bright_limit
+                if isinstance(mag_faint_limit, (list, tuple)):
+                    use_faint_maglim = mag_faint_limit[
+                        magcols.index(mcol)
+                    ]
+                else:
+                    use_faint_maglim = mag_faint_limit
+
+                # make sure the object lies in the mag limits and RMS limits we
+                # set before to try to accept it into the TFA ensemble
+                if ((use_bright_maglim < thismag < use_faint_maglim) and
+                    (1.4826*thismad < max_rms)):
+
+                    lcmag.append(thismag)
+                    lcmad.append(thismad)
+                    lceta.append(thiseta)
+                    lcndet.append(thisndet)
+                    lcobj.append(thisobj)
+                    lcfpaths.append(thislcf)
+                    lcra.append(thisra)
+                    lcdecl.append(thisdecl)
+
+            except Exception as e:
+                pass
+
+        # make sure we have enough LCs to work on
+        if len(lcobj) >= min_template_number:
+
+            LOGINFO('magcol: %s, %s objects eligible for '
+                    'template selection after filtering on mag '
+                    'limits (%s, %s) and max RMS (%s)' %
+                    (mcol, len(lcobj),
+                     mag_bright_limit, mag_faint_limit, max_rms))
+
+            lcmag = np.array(lcmag)
+            lcmad = np.array(lcmad)
+            lceta = np.array(lceta)
+            lcndet = np.array(lcndet)
+            lcobj = np.array(lcobj)
+            lcfpaths = np.array(lcfpaths)
+            lcra = np.array(lcra)
+            lcdecl = np.array(lcdecl)
+
+            sortind = np.argsort(lcmag)
+            lcmag = lcmag[sortind]
+            lcmad = lcmad[sortind]
+            lceta = lceta[sortind]
+            lcndet = lcndet[sortind]
+            lcobj = lcobj[sortind]
+            lcfpaths = lcfpaths[sortind]
+            lcra = lcra[sortind]
+            lcdecl = lcdecl[sortind]
+
+            # 1. get the mag-MAD relation
+
+            # this is needed for spline fitting
+            # should take care of the pesky 'x must be strictly increasing' bit
+            splfit_ind = np.diff(lcmag) > 0.0
+            splfit_ind = np.concatenate((np.array([True]), splfit_ind))
+
+            fit_lcmag = lcmag[splfit_ind]
+            fit_lcmad = lcmad[splfit_ind]
+            fit_lceta = lceta[splfit_ind]
+
+            magmadfit = np.poly1d(np.polyfit(
+                fit_lcmag,
+                fit_lcmad,
+                2
+            ))
+            magmadind = lcmad/magmadfit(lcmag) < max_mult_above_magmad
+
+            # 2. get the mag-eta relation
+            magetafit = np.poly1d(np.polyfit(
+                fit_lcmag,
+                fit_lceta,
+                2
+            ))
+            magetaind = magetafit(lcmag)/lceta < max_mult_above_mageta
+
+            # 3. get the median ndet
+            median_ndet = np.median(lcndet)
+            ndetind = lcndet >= median_ndet
+
+            # form the final template ensemble
+            templateind = magmadind & magetaind & ndetind
+
+            # check again if we have enough LCs in the template
+            if templateind.sum() >= min_template_number:
+
+                LOGINFO('magcol: %s, %s objects selectable for TFA templates' %
+                        (mcol, templateind.sum()))
+
+                templatemag = lcmag[templateind]
+                templatemad = lcmad[templateind]
+                templateeta = lceta[templateind]
+                templatendet = lcndet[templateind]
+                templateobj = lcobj[templateind]
+                templatelcf = lcfpaths[templateind]
+                templatera = lcra[templateind]
+                templatedecl = lcdecl[templateind]
+
+                # now, check if we have no more than the required fraction of
+                # TFA templates
+                target_number_templates = int(target_template_frac*len(results))
+
+                if target_number_templates > max_template_number:
+                    target_number_templates = max_template_number
+
+                LOGINFO('magcol: %s, selecting %s TFA templates randomly' %
+                        (mcol, target_number_templates))
+
+                # FIXME: how do we select uniformly in xi-eta?
+                # 1. 2D histogram the data into binsize (nx, ny)
+                # 2. random uniform select from 0 to nx-1, 0 to ny-1
+                # 3. pick object from selected bin
+                # 4. continue until we have target_number_templates
+                # 5. make sure the same object isn't picked twice
+
+                # get the xi-eta
+                template_cxi, template_ceta = coordutils.xieta_from_radecl(
+                    templatera,
+                    templatedecl,
+                    center_ra,
+                    center_decl
+                )
+
+                cxi_bins = np.linspace(template_cxi.min(),
+                                       template_cxi.max(),
+                                       num=xieta_bins)
+                ceta_bins = np.linspace(template_ceta.min(),
+                                        template_ceta.max(),
+                                        num=xieta_bins)
+
+                digitized_cxi_inds = np.digitize(template_cxi, cxi_bins)
+                digitized_ceta_inds = np.digitize(template_ceta, ceta_bins)
+
+                # pick target_number_templates indexes out of the bins
+                targetind = npr.choice(xieta_bins,
+                                       target_number_templates,
+                                       replace=True)
+
+                # put together the template lists
+                selected_template_obj = []
+                selected_template_lcf = []
+                selected_template_ndet = []
+                selected_template_ra = []
+                selected_template_decl = []
+                selected_template_mag = []
+                selected_template_mad = []
+                selected_template_eta = []
+
+                for ind in targetind:
+
+                    pass
+
+
+                # select random uniform objects from the template candidates
+                targetind = npr.choice(templateobj.size,
+                                       target_number_templates,
+                                       replace=False)
+
+                templatemag = templatemag[targetind]
+                templatemad = templatemad[targetind]
+                templateeta = templateeta[targetind]
+                templatendet = templatendet[targetind]
+                templateobj = templateobj[targetind]
+                templatelcf = templatelcf[targetind]
+                templatera = templatera[targetind]
+                templatedecl = templatedecl[targetind]
+
+                # get the max ndet so far to use that LC as the timebase
+                maxndetind = templatendet == templatendet.max()
+                timebaselcf = templatelcf[maxndetind][0]
+                timebasendet = templatendet[maxndetind][0]
+
+                LOGINFO('magcol: %s, selected %s as template time '
+                        'base LC with %s observations' %
+                        (mcol, timebaselcf, timebasendet))
+
+                if process_template_lcs:
+
+                    timebaselcdict = readerfunc(timebaselcf)
+
+                    if ( (isinstance(timebaselcdict, (list, tuple))) and
+                         (isinstance(timebaselcdict[0], dict)) ):
+                        timebaselcdict = timebaselcdict[0]
+
+                    # this is the timebase to use for all of the templates
+                    timebase = _dict_get(timebaselcdict, tcolget)
+
+                else:
+                    timebase = None
+
+                # also check if the number of templates is longer than the
+                # actual timebase of the observations. this will cause issues
+                # with overcorrections and will probably break TFA
+                if target_number_templates > timebasendet:
+
+                    LOGWARNING('The number of TFA templates (%s) is '
+                               'larger than the number of observations '
+                               'of the time base (%s). This will likely '
+                               'overcorrect all light curves to a '
+                               'constant level. '
+                               'Will use up to %s x timebase ndet '
+                               'templates instead' %
+                               (target_number_templates,
+                                timebasendet,
+                                max_target_frac_obs))
+
+                    # regen the templates based on the new number
+                    newmaxtemplates = int(max_target_frac_obs*timebasendet)
+
+                    # choose this number out of the already chosen templates
+                    # randomly
+
+                    LOGWARNING('magcol: %s, re-selecting %s TFA '
+                               'templates randomly' %
+                               (mcol, newmaxtemplates))
+
+                    # FIXME: how do we select uniformly in ra-decl?
+                    # 1. 2D histogram the data into binsize (nx, ny)
+                    # 2. random uniform select from 0 to nx-1, 0 to ny-1
+                    # 3. pick object from selected bin
+                    # 4. continue until we have target_number_templates
+                    # 5. make sure the same object isn't picked twice
+
+                    # select random uniform objects from the template candidates
+                    targetind = npr.choice(templateobj.size,
+                                           newmaxtemplates,
+                                           replace=False)
+
+                    templatemag = templatemag[targetind]
+                    templatemad = templatemad[targetind]
+                    templateeta = templateeta[targetind]
+                    templatendet = templatendet[targetind]
+                    templateobj = templateobj[targetind]
+                    templatelcf = templatelcf[targetind]
+                    templatera = templatera[targetind]
+                    templatedecl = templatedecl[targetind]
+
+                    # get the max ndet so far to use that LC as the timebase
+                    maxndetind = templatendet == templatendet.max()
+                    timebaselcf = templatelcf[maxndetind][0]
+                    timebasendet = templatendet[maxndetind][0]
+                    LOGWARNING('magcol: %s, re-selected %s as template time '
+                               'base LC with %s observations' %
+                               (mcol, timebaselcf, timebasendet))
+
+                    if process_template_lcs:
+
+                        timebaselcdict = readerfunc(timebaselcf)
+
+                        if ( (isinstance(timebaselcdict, (list, tuple))) and
+                             (isinstance(timebaselcdict[0], dict)) ):
+                            timebaselcdict = timebaselcdict[0]
+
+                        # this is the timebase to use for all of the templates
+                        timebase = _dict_get(timebaselcdict, tcolget)
+
+                    else:
+
+                        timebase = None
+
+                #
+                # end of check for ntemplates > timebase ndet
+                #
+
+                if process_template_lcs:
+
+                    LOGINFO('magcol: %s, reforming TFA template LCs to '
+                            ' chosen timebase...' % mcol)
+
+                    # reform all template LCs to this time base, normalize to
+                    # zero, and sigclip as requested. this is a parallel op
+                    # first, we'll collect the light curve info
+                    tasks = [(x, lcformat, lcformatdir,
+                              tcol, mcol, ecol,
+                              timebase, template_interpolate,
+                              template_sigclip) for x
+                             in templatelcf]
+
+                    pool = mp.Pool(nworkers, maxtasksperchild=maxworkertasks)
+                    reform_results = pool.map(_reform_templatelc_for_tfa, tasks)
+                    pool.close()
+                    pool.join()
+
+                    # generate a 2D array for the template magseries with
+                    # dimensions = (n_objects, n_lcpoints)
+                    template_magseries = np.array([x['mags']
+                                                   for x in reform_results])
+                    template_errseries = np.array([x['errs']
+                                                   for x in reform_results])
+
+                else:
+                    template_magseries = None
+                    template_errseries = None
+
+                # put everything into a templateinfo dict for this magcol
+                outdict[mcol].update({
+                    'timebaselcf':timebaselcf,
+                    'timebase':timebase,
+                    'trendfits':{'mag-mad':magmadfit,
+                                 'mag-eta':magetafit},
+                    'template_objects':templateobj,
+                    'template_ra':templatera,
+                    'template_decl':templatedecl,
+                    'template_mag':templatemag,
+                    'template_mad':templatemad,
+                    'template_eta':templateeta,
+                    'template_ndet':templatendet,
+                    'template_magseries':template_magseries,
+                    'template_errseries':template_errseries
+                })
+
+                # make a KDTree on the template coordinates
+                outdict[mcol]['template_radecl_kdtree'] = (
+                    coordutils.make_kdtree(
+                        templatera, templatedecl
+                    )
+                )
+
+            # if we don't have enough, return nothing for this magcol
+            else:
+                LOGERROR('not enough objects meeting requested '
+                         'MAD, eta, ndet conditions to '
+                         'select templates for magcol: %s' % mcol)
+                continue
+
+        else:
+
+            LOGERROR('nobjects: %s, not enough in requested mag range to '
+                     'select templates for magcol: %s' % (len(lcobj),mcol))
+
+            continue
+
+        # make the plots for mag-MAD/mag-eta relation and fits used
+        plt.plot(lcmag, lcmad, marker='o', linestyle='none', ms=1.0)
+        modelmags = np.linspace(lcmag.min(), lcmag.max(), num=1000)
+        plt.plot(modelmags, outdict[mcol]['trendfits']['mag-mad'](modelmags))
+        plt.yscale('log')
+        plt.xlabel('catalog magnitude')
+        plt.ylabel('light curve MAD')
+        plt.title('catalog mag vs. light curve MAD and fit')
+        plt.savefig('catmag-%s-lcmad-fit.png' % mcol,
+                    bbox_inches='tight')
+        plt.close('all')
+
+        plt.plot(lcmag, lceta, marker='o', linestyle='none', ms=1.0)
+        modelmags = np.linspace(lcmag.min(), lcmag.max(), num=1000)
+        plt.plot(modelmags, outdict[mcol]['trendfits']['mag-eta'](modelmags))
+        plt.yscale('log')
+        plt.xlabel('catalog magnitude')
+        plt.ylabel('light curve eta variable index')
+        plt.title('catalog mag vs. light curve eta and fit')
+        plt.savefig('catmag-%s-lceta-fit.png' % mcol,
+                    bbox_inches='tight')
+        plt.close('all')
+
+
+    #
+    # end of operating on each magcol
+    #
+
+    # save the templateinfo dict to a pickle if requested
+    if outfile:
+
+        if outfile.endswith('.gz'):
+            outfd = gzip.open(outfile,'wb')
+        else:
+            outfd = open(outfile,'wb')
+
+        with outfd:
+            pickle.dump(outdict, outfd, protocol=pickle.HIGHEST_PROTOCOL)
+
+    # return the templateinfo dict
+    return outdict
+def get_recovered_variables_for_magbin(simbasedir,
+                                       magbinmedian,
+                                       stetson_stdev_min=2.0,
+                                       inveta_stdev_min=2.0,
+                                       iqr_stdev_min=2.0,
+                                       statsonly=True):
+    '''This runs variability selection for the given magbinmedian.
+
+    To generate a full recovery matrix over all magnitude bins, run this
+    function for each magbin over the specified stetson_stdev_min and
+    inveta_stdev_min grid.
+
+    Parameters
+    ----------
+
+    simbasedir : str
+        The input directory of fake LCs.
+
+    magbinmedian : float
+        The magbin to run the variable recovery for. This is an item from the
+        dict from `simbasedir/fakelcs-info.pkl: `fakelcinfo['magrms'][magcol]`
+        list for each magcol and designates which magbin to get the recovery
+        stats for.
+
+    stetson_stdev_min : float
+        The minimum sigma above the trend in the Stetson J variability index
+        distribution for this magbin to use to consider objects as variable.
+
+    inveta_stdev_min : float
+        The minimum sigma above the trend in the 1/eta variability index
+        distribution for this magbin to use to consider objects as variable.
+
+    iqr_stdev_min : float
+        The minimum sigma above the trend in the IQR variability index
+        distribution for this magbin to use to consider objects as variable.
+
+    statsonly : bool
+        If this is True, only the final stats will be returned. If False, the
+        full arrays used to generate the stats will also be returned.
+
+    Returns
+    -------
+
+    dict
+        The returned dict contains statistics for this magbin and if requested,
+        the full arrays used to calculate the statistics.
+
+    '''
+
+
+    # get the info from the simbasedir
+    with open(os.path.join(simbasedir, 'fakelcs-info.pkl'),'rb') as infd:
+        siminfo = pickle.load(infd)
+
+    objectids = siminfo['objectid']
+    varflags = siminfo['isvariable']
+    sdssr = siminfo['sdssr']
+
+    # get the column defs for the fakelcs
+    timecols = siminfo['timecols']
+    magcols = siminfo['magcols']
+    errcols = siminfo['errcols']
+
+    # register the fakelc pklc as a custom lcproc format
+    # now we should be able to use all lcproc functions correctly
+    fakelc_formatkey = 'fake-%s' % siminfo['lcformat']
+    lcproc.register_lcformat(
+        fakelc_formatkey,
+        '*-fakelc.pkl',
+        timecols,
+        magcols,
+        errcols,
+        'astrobase.lcproc',
+        '_read_pklc',
+        magsarefluxes=siminfo['magsarefluxes']
+    )
+
+    # make the output directory if it doesn't exit
+    outdir = os.path.join(simbasedir, 'recvar-threshold-pkls')
+    if not os.path.exists(outdir):
+        os.mkdir(outdir)
+
+    # run the variability search
+    varfeaturedir = os.path.join(simbasedir, 'varfeatures')
+    varthreshinfof = os.path.join(
+        outdir,
+        'varthresh-magbinmed%.2f-stet%.2f-inveta%.2f.pkl' % (magbinmedian,
+                                                             stetson_stdev_min,
+                                                             inveta_stdev_min)
+    )
+    varthresh = varthreshold.variability_threshold(
+        varfeaturedir,
+        varthreshinfof,
+        lcformat=fakelc_formatkey,
+        min_stetj_stdev=stetson_stdev_min,
+        min_inveta_stdev=inveta_stdev_min,
+        min_iqr_stdev=iqr_stdev_min,
+        verbose=False
+    )
+
+    # get the magbins from the varthresh info
+    magbins = varthresh['magbins']
+
+    # get the magbininds
+    magbininds = np.digitize(sdssr, magbins)
+
+    # bin the objects according to these magbins
+    binned_objectids = []
+    binned_actualvars = []
+    binned_actualnotvars = []
+
+    # go through all the mag bins and bin up the objectids, actual variables,
+    # and actual not-variables
+    for mbinind, _magi in zip(np.unique(magbininds),
+                              range(len(magbins)-1)):
+
+        thisbinind = np.where(magbininds == mbinind)
+
+        thisbin_objectids = objectids[thisbinind]
+        thisbin_varflags = varflags[thisbinind]
+
+        thisbin_actualvars = thisbin_objectids[thisbin_varflags]
+        thisbin_actualnotvars = thisbin_objectids[~thisbin_varflags]
+
+        binned_objectids.append(thisbin_objectids)
+        binned_actualvars.append(thisbin_actualvars)
+        binned_actualnotvars.append(thisbin_actualnotvars)
+
+
+    # this is the output dict
+    recdict = {
+        'simbasedir':simbasedir,
+        'timecols':timecols,
+        'magcols':magcols,
+        'errcols':errcols,
+        'magsarefluxes':siminfo['magsarefluxes'],
+        'stetj_min_stdev':stetson_stdev_min,
+        'inveta_min_stdev':inveta_stdev_min,
+        'iqr_min_stdev':iqr_stdev_min,
+        'magbinmedian':magbinmedian,
+    }
+
+
+    # now, for each magcol, find the magbin corresponding to magbinmedian, and
+    # get its stats
+    for magcol in magcols:
+
+        # this is the index of the matching magnitude bin for the magbinmedian
+        # provided
+        magbinind = np.where(
+            np.array(varthresh[magcol]['binned_sdssr_median']) == magbinmedian
+        )
+
+        magbinind = np.asscalar(magbinind[0])
+
+        # get the objectids, actual vars and actual notvars in this magbin
+        thisbin_objectids = binned_objectids[magbinind]
+        thisbin_actualvars = binned_actualvars[magbinind]
+        thisbin_actualnotvars = binned_actualnotvars[magbinind]
+
+        # stetson recovered variables in this magbin
+        stet_recoveredvars = varthresh[magcol][
+            'binned_objectids_thresh_stetsonj'
+        ][magbinind]
+
+        # calculate TP, FP, TN, FN
+        stet_recoverednotvars = np.setdiff1d(thisbin_objectids,
+                                             stet_recoveredvars)
+
+        stet_truepositives = np.intersect1d(stet_recoveredvars,
+                                            thisbin_actualvars)
+        stet_falsepositives = np.intersect1d(stet_recoveredvars,
+                                             thisbin_actualnotvars)
+        stet_truenegatives = np.intersect1d(stet_recoverednotvars,
+                                            thisbin_actualnotvars)
+        stet_falsenegatives = np.intersect1d(stet_recoverednotvars,
+                                             thisbin_actualvars)
+
+        # calculate stetson recall, precision, Matthews correl coeff
+        stet_recall = recall(stet_truepositives.size,
+                             stet_falsenegatives.size)
+
+        stet_precision = precision(stet_truepositives.size,
+                                   stet_falsepositives.size)
+
+        stet_mcc = matthews_correl_coeff(stet_truepositives.size,
+                                         stet_truenegatives.size,
+                                         stet_falsepositives.size,
+                                         stet_falsenegatives.size)
+
+
+        # inveta recovered variables in this magbin
+        inveta_recoveredvars = varthresh[magcol][
+            'binned_objectids_thresh_inveta'
+        ][magbinind]
+        inveta_recoverednotvars = np.setdiff1d(thisbin_objectids,
+                                               inveta_recoveredvars)
+
+        inveta_truepositives = np.intersect1d(inveta_recoveredvars,
+                                              thisbin_actualvars)
+        inveta_falsepositives = np.intersect1d(inveta_recoveredvars,
+                                               thisbin_actualnotvars)
+        inveta_truenegatives = np.intersect1d(inveta_recoverednotvars,
+                                              thisbin_actualnotvars)
+        inveta_falsenegatives = np.intersect1d(inveta_recoverednotvars,
+                                               thisbin_actualvars)
+
+        # calculate inveta recall, precision, Matthews correl coeff
+        inveta_recall = recall(inveta_truepositives.size,
+                               inveta_falsenegatives.size)
+
+        inveta_precision = precision(inveta_truepositives.size,
+                                     inveta_falsepositives.size)
+
+        inveta_mcc = matthews_correl_coeff(inveta_truepositives.size,
+                                           inveta_truenegatives.size,
+                                           inveta_falsepositives.size,
+                                           inveta_falsenegatives.size)
+
+
+        # iqr recovered variables in this magbin
+        iqr_recoveredvars = varthresh[magcol][
+            'binned_objectids_thresh_iqr'
+        ][magbinind]
+        iqr_recoverednotvars = np.setdiff1d(thisbin_objectids,
+                                            iqr_recoveredvars)
+
+        iqr_truepositives = np.intersect1d(iqr_recoveredvars,
+                                           thisbin_actualvars)
+        iqr_falsepositives = np.intersect1d(iqr_recoveredvars,
+                                            thisbin_actualnotvars)
+        iqr_truenegatives = np.intersect1d(iqr_recoverednotvars,
+                                           thisbin_actualnotvars)
+        iqr_falsenegatives = np.intersect1d(iqr_recoverednotvars,
+                                            thisbin_actualvars)
+
+        # calculate iqr recall, precision, Matthews correl coeff
+        iqr_recall = recall(iqr_truepositives.size,
+                            iqr_falsenegatives.size)
+
+        iqr_precision = precision(iqr_truepositives.size,
+                                  iqr_falsepositives.size)
+
+        iqr_mcc = matthews_correl_coeff(iqr_truepositives.size,
+                                        iqr_truenegatives.size,
+                                        iqr_falsepositives.size,
+                                        iqr_falsenegatives.size)
+
+
+        # calculate the items missed by one method but found by the other
+        # methods
+        stet_missed_inveta_found = np.setdiff1d(inveta_truepositives,
+                                                stet_truepositives)
+        stet_missed_iqr_found = np.setdiff1d(iqr_truepositives,
+                                             stet_truepositives)
+
+        inveta_missed_stet_found = np.setdiff1d(stet_truepositives,
+                                                inveta_truepositives)
+        inveta_missed_iqr_found = np.setdiff1d(iqr_truepositives,
+                                               inveta_truepositives)
+
+        iqr_missed_stet_found = np.setdiff1d(stet_truepositives,
+                                             iqr_truepositives)
+        iqr_missed_inveta_found = np.setdiff1d(inveta_truepositives,
+                                               iqr_truepositives)
+
+        if not statsonly:
+
+            recdict[magcol] = {
+                # stetson J alone
+                'stet_recoveredvars':stet_recoveredvars,
+                'stet_truepositives':stet_truepositives,
+                'stet_falsepositives':stet_falsepositives,
+                'stet_truenegatives':stet_truenegatives,
+                'stet_falsenegatives':stet_falsenegatives,
+                'stet_precision':stet_precision,
+                'stet_recall':stet_recall,
+                'stet_mcc':stet_mcc,
+                # inveta alone
+                'inveta_recoveredvars':inveta_recoveredvars,
+                'inveta_truepositives':inveta_truepositives,
+                'inveta_falsepositives':inveta_falsepositives,
+                'inveta_truenegatives':inveta_truenegatives,
+                'inveta_falsenegatives':inveta_falsenegatives,
+                'inveta_precision':inveta_precision,
+                'inveta_recall':inveta_recall,
+                'inveta_mcc':inveta_mcc,
+                # iqr alone
+                'iqr_recoveredvars':iqr_recoveredvars,
+                'iqr_truepositives':iqr_truepositives,
+                'iqr_falsepositives':iqr_falsepositives,
+                'iqr_truenegatives':iqr_truenegatives,
+                'iqr_falsenegatives':iqr_falsenegatives,
+                'iqr_precision':iqr_precision,
+                'iqr_recall':iqr_recall,
+                'iqr_mcc':iqr_mcc,
+                # true positive variables missed by one method but picked up by
+                # the others
+                'stet_missed_inveta_found':stet_missed_inveta_found,
+                'stet_missed_iqr_found':stet_missed_iqr_found,
+                'inveta_missed_stet_found':inveta_missed_stet_found,
+                'inveta_missed_iqr_found':inveta_missed_iqr_found,
+                'iqr_missed_stet_found':iqr_missed_stet_found,
+                'iqr_missed_inveta_found':iqr_missed_inveta_found,
+                # bin info
+                'actual_variables':thisbin_actualvars,
+                'actual_nonvariables':thisbin_actualnotvars,
+                'all_objectids':thisbin_objectids,
+                'magbinind':magbinind,
+
+            }
+
+        # if statsonly is set, then we only return the numbers but not the
+        # arrays themselves
+        else:
+
+            recdict[magcol] = {
+                # stetson J alone
+                'stet_recoveredvars':stet_recoveredvars.size,
+                'stet_truepositives':stet_truepositives.size,
+                'stet_falsepositives':stet_falsepositives.size,
+                'stet_truenegatives':stet_truenegatives.size,
+                'stet_falsenegatives':stet_falsenegatives.size,
+                'stet_precision':stet_precision,
+                'stet_recall':stet_recall,
+                'stet_mcc':stet_mcc,
+                # inveta alone
+                'inveta_recoveredvars':inveta_recoveredvars.size,
+                'inveta_truepositives':inveta_truepositives.size,
+                'inveta_falsepositives':inveta_falsepositives.size,
+                'inveta_truenegatives':inveta_truenegatives.size,
+                'inveta_falsenegatives':inveta_falsenegatives.size,
+                'inveta_precision':inveta_precision,
+                'inveta_recall':inveta_recall,
+                'inveta_mcc':inveta_mcc,
+                # iqr alone
+                'iqr_recoveredvars':iqr_recoveredvars.size,
+                'iqr_truepositives':iqr_truepositives.size,
+                'iqr_falsepositives':iqr_falsepositives.size,
+                'iqr_truenegatives':iqr_truenegatives.size,
+                'iqr_falsenegatives':iqr_falsenegatives.size,
+                'iqr_precision':iqr_precision,
+                'iqr_recall':iqr_recall,
+                'iqr_mcc':iqr_mcc,
+                # true positive variables missed by one method but picked up by
+                # the others
+                'stet_missed_inveta_found':stet_missed_inveta_found.size,
+                'stet_missed_iqr_found':stet_missed_iqr_found.size,
+                'inveta_missed_stet_found':inveta_missed_stet_found.size,
+                'inveta_missed_iqr_found':inveta_missed_iqr_found.size,
+                'iqr_missed_stet_found':iqr_missed_stet_found.size,
+                'iqr_missed_inveta_found':iqr_missed_inveta_found.size,
+                # bin info
+                'actual_variables':thisbin_actualvars.size,
+                'actual_nonvariables':thisbin_actualnotvars.size,
+                'all_objectids':thisbin_objectids.size,
+                'magbinind':magbinind,
+            }
+
+
+    #
+    # done with per magcol
+    #
+
+    return recdict
+def update_assembly(data):
+    """
+    Create a new Assembly() and convert as many of our old params to the new
+    version as we can. Also report out any parameters that are removed
+    and what their values are.
+    """
+
+    print("##############################################################")
+    print("Updating assembly to current version")
+    ## New assembly object to update pdate from.
+    new_assembly = ip.Assembly("update", quiet=True)
+
+    ## Hackersonly dict gets automatically overwritten
+    ## Always use the current version for params in this dict.
+    data._hackersonly = deepcopy(new_assembly._hackersonly)
+
+    new_params = set(new_assembly.paramsdict.keys())
+
+    my_params = set(data.paramsdict.keys())
+
+    ## Find all params in loaded assembly that aren't in the new assembly.
+    ## Make a new dict that doesn't include anything in removed_params
+    removed_params = my_params.difference(new_params)
+    for i in removed_params:
+        print("Removing parameter: {} = {}".format(i, data.paramsdict[i]))
+
+    ## Find all params that are in the new paramsdict and not in the old one.
+    ## If the set isn't emtpy then we create a new dictionary based on the new
+    ## assembly parameters and populated with currently loaded assembly values.
+    ## Conditioning on not including any removed params. Magic.
+    added_params = new_params.difference(my_params)
+    for i in added_params:
+        print("Adding parameter: {} = {}".format(i, new_assembly.paramsdict[i]))
+
+    print("\nPlease take note of these changes. Every effort is made to\n"\
+            +"ensure compatibility across versions of ipyrad. See online\n"\
+            +"documentation for further details about new parameters.")
+    time.sleep(5)
+    print("##############################################################")
+
+    if added_params:
+        for i in data.paramsdict:
+            if i not in removed_params:
+                new_assembly.paramsdict[i] = data.paramsdict[i]
+        data.paramsdict = deepcopy(new_assembly.paramsdict)
+
+    data.save()
+    return data
+def join(self, password=None, history_maxchars = None,
+            history_maxstanzas = None, history_seconds = None, history_since = None):
+        """
+        Send a join request for the room.
+
+        :Parameters:
+            - `password`: password to the room.
+            - `history_maxchars`: limit of the total number of characters in
+              history.
+            - `history_maxstanzas`: limit of the total number of messages in
+              history.
+            - `history_seconds`: send only messages received in the last
+              `history_seconds` seconds.
+            - `history_since`: Send only the messages received since the
+              dateTime specified (UTC).
+        :Types:
+            - `password`: `unicode`
+            - `history_maxchars`: `int`
+            - `history_maxstanzas`: `int`
+            - `history_seconds`: `int`
+            - `history_since`: `datetime.datetime`
+        """
+        if self.joined:
+            raise RuntimeError("Room is already joined")
+        p=MucPresence(to_jid=self.room_jid)
+        p.make_join_request(password, history_maxchars, history_maxstanzas,
+                history_seconds, history_since)
+        self.manager.stream.send(p)
+def _at_block_start(tc, line):
+        """
+        Improve QTextCursor.atBlockStart to ignore spaces
+        """
+        if tc.atBlockStart():
+            return True
+        column = tc.columnNumber()
+        indentation = len(line) - len(line.lstrip())
+        return column <= indentation
+def _string(self):
+        """:return: the string from a :class:`io.StringIO`"""
+        file = StringIO()
+        self.__dump_to_file(file)
+        file.seek(0)
+        return file.read()
+def plot_diff(self, graphing_library='matplotlib'):
+    """
+    Generate CDF diff plots of the submetrics
+    """
+    diff_datasource = sorted(set(self.reports[0].datasource) & set(self.reports[1].datasource))
+    graphed = False
+    for submetric in diff_datasource:
+      baseline_csv = naarad.utils.get_default_csv(self.reports[0].local_location, (submetric + '.percentiles'))
+      current_csv = naarad.utils.get_default_csv(self.reports[1].local_location, (submetric + '.percentiles'))
+      if (not (naarad.utils.is_valid_file(baseline_csv) & naarad.utils.is_valid_file(current_csv))):
+        continue
+      baseline_plot = PD(input_csv=baseline_csv, csv_column=1, series_name=submetric, y_label=submetric, precision=None, graph_height=600, graph_width=1200,
+                         graph_type='line', plot_label='baseline', x_label='Percentiles')
+      current_plot = PD(input_csv=current_csv, csv_column=1, series_name=submetric, y_label=submetric, precision=None, graph_height=600, graph_width=1200,
+                        graph_type='line', plot_label='current', x_label='Percentiles')
+      graphed, div_file = Diff.graphing_modules[graphing_library].graph_data_on_the_same_graph([baseline_plot, current_plot],
+                                                                                               os.path.join(self.output_directory, self.resource_path),
+                                                                                               self.resource_path, (submetric + '.diff'))
+      if graphed:
+        self.plot_files.append(div_file)
+    return True
+def stop(ctx, yes):
+    """Stop experiment.
+
+    Uses [Caching](/references/polyaxon-cli/#caching)
+
+    Examples:
+
+    \b
+    ```bash
+    $ polyaxon experiment stop
+    ```
+
+    \b
+    ```bash
+    $ polyaxon experiment -xp 2 stop
+    ```
+    """
+    user, project_name, _experiment = get_project_experiment_or_local(ctx.obj.get('project'),
+                                                                      ctx.obj.get('experiment'))
+    if not yes and not click.confirm("Are sure you want to stop "
+                                     "experiment `{}`".format(_experiment)):
+        click.echo('Existing without stopping experiment.')
+        sys.exit(0)
+
+    try:
+        PolyaxonClient().experiment.stop(user, project_name, _experiment)
+    except (PolyaxonHTTPError, PolyaxonShouldExitError, PolyaxonClientException) as e:
+        Printer.print_error('Could not stop experiment `{}`.'.format(_experiment))
+        Printer.print_error('Error message `{}`.'.format(e))
+        sys.exit(1)
+
+    Printer.print_success("Experiment is being stopped.")
+def create(cls, data, id_=None):
+        """Create a deposit.
+
+        Initialize the follow information inside the deposit:
+
+        .. code-block:: python
+
+            deposit['_deposit'] = {
+                'id': pid_value,
+                'status': 'draft',
+                'owners': [user_id],
+                'created_by': user_id,
+            }
+
+        The deposit index is updated.
+
+        :param data: Input dictionary to fill the deposit.
+        :param id_: Default uuid for the deposit.
+        :returns: The new created deposit.
+        """
+        data.setdefault('$schema', current_jsonschemas.path_to_url(
+            current_app.config['DEPOSIT_DEFAULT_JSONSCHEMA']
+        ))
+        if '_deposit' not in data:
+            id_ = id_ or uuid.uuid4()
+            cls.deposit_minter(id_, data)
+
+        data['_deposit'].setdefault('owners', list())
+        if current_user and current_user.is_authenticated:
+            creator_id = int(current_user.get_id())
+
+            if creator_id not in data['_deposit']['owners']:
+                data['_deposit']['owners'].append(creator_id)
+
+            data['_deposit']['created_by'] = creator_id
+
+        return super(Deposit, cls).create(data, id_=id_)
+def getapplist(self):
+        """
+        Get all accessibility application name that are currently running
+
+        @return: list of appliction name of string type on success.
+        @rtype: list
+        """
+        app_list = []
+        # Update apps list, before parsing the list
+        self._update_apps()
+        for gui in self._running_apps:
+            name = gui.localizedName()
+            # default type was objc.pyobjc_unicode
+            # convert to Unicode, else exception is thrown
+            # TypeError: "cannot marshal <type 'objc.pyobjc_unicode'> objects"
+            try:
+                name = unicode(name)
+            except NameError:
+                name = str(name)
+            except UnicodeEncodeError:
+                pass
+            app_list.append(name)
+        # Return unique application list
+        return list(set(app_list))
+def setcursorposition(self, window_name, object_name, cursor_position):
+        """
+        Set cursor position
+
+        @param window_name: Window name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type window_name: string
+        @param object_name: Object name to type in, either full name,
+        LDTP's name convention, or a Unix glob.
+        @type object_name: string
+        @param cursor_position: Cursor position to be set
+        @type object_name: string
+
+        @return: 1 on success.
+        @rtype: integer
+        """
+        object_handle = self._get_object_handle(window_name, object_name)
+        if not object_handle.AXEnabled:
+            raise LdtpServerException(u"Object %s state disabled" % object_name)
+        object_handle.AXSelectedTextRange.loc = cursor_position
+        return 1
+def _is_compound_mfr_temperature_tuple(self, value):
+        """Determines whether value is a tuple of the format
+        (compound(str), mfr(float), temperature(float)).
+
+        :param value: The value to be tested.
+
+        :returns: True or False"""
+
+        if not type(value) is tuple:
+            return False
+        elif not len(value) == 3:
+            return False
+        elif not type(value[0]) is str:
+            return False
+        elif not type(value[1]) is float and \
+                not type(value[1]) is numpy.float64 and \
+                not type(value[1]) is numpy.float32:
+            return False
+        elif not type(value[1]) is float and \
+                not type(value[1]) is numpy.float64 and \
+                not type(value[1]) is numpy.float32:
+            return False
+        else:
+            return True
+def stop(self):
+        """
+        Stops monitoring the predefined directory.
+        """
+        with self._status_lock:
+            if self._running:
+                assert self._observer is not None
+                self._observer.stop()
+                self._running = False
+                self._origin_mapped_data = dict()
+def read(self, request, pk=None):
+        """
+        Mark the message as read (i.e. delete from inbox)
+        """
+        from .settings import stored_messages_settings
+        backend = stored_messages_settings.STORAGE_BACKEND()
+
+        try:
+            backend.inbox_delete(request.user, pk)
+        except MessageDoesNotExist as e:
+            return Response(e.message, status='404')
+
+        return Response({'status': 'message marked as read'})
+def create_empty_dataset(self, ds_name, dtype=np.float32):
+        """
+        Creates a Dataset with unknown size.
+        Resize it before using.
+
+        :param ds_name: string
+
+        :param dtype: dtype
+        Datatype of the dataset
+
+        :return: h5py DataSet
+        """
+        if ds_name in self._datasets:
+            return self._datasets[ds_name]
+
+        ds = self._group.create_dataset(ds_name, (1, 1), maxshape=None,
+                                        dtype=dtype)
+        self._datasets[ds_name] = ds
+
+        return ds
+def update(course=False):
+    """
+    Update the data of courses and or exercises from server.
+    """
+    if course:
+        with Spinner.context(msg="Updated course metadata.",
+                             waitmsg="Updating course metadata."):
+            for course in api.get_courses():
+                old = None
+                try:
+                    old = Course.get(Course.tid == course["id"])
+                except peewee.DoesNotExist:
+                    old = None
+                if old:
+                    old.details_url = course["details_url"]
+                    old.save()
+                    continue
+                Course.create(tid=course["id"], name=course["name"],
+                              details_url=course["details_url"])
+    else:
+        selected = Course.get_selected()
+
+        # with Spinner.context(msg="Updated exercise metadata.",
+        #                     waitmsg="Updating exercise metadata."):
+        print("Updating exercise data.")
+        for exercise in api.get_exercises(selected):
+            old = None
+            try:
+                old = Exercise.byid(exercise["id"])
+            except peewee.DoesNotExist:
+                old = None
+            if old is not None:
+                old.name = exercise["name"]
+                old.course = selected.id
+                old.is_attempted = exercise["attempted"]
+                old.is_completed = exercise["completed"]
+                old.deadline = exercise.get("deadline")
+                old.is_downloaded = os.path.isdir(old.path())
+                old.return_url = exercise["return_url"]
+                old.zip_url = exercise["zip_url"]
+                old.submissions_url = exercise["exercise_submissions_url"]
+                old.save()
+                download_exercise(old, update=True)
+            else:
+                ex = Exercise.create(tid=exercise["id"],
+                                     name=exercise["name"],
+                                     course=selected.id,
+                                     is_attempted=exercise["attempted"],
+                                     is_completed=exercise["completed"],
+                                     deadline=exercise.get("deadline"),
+                                     return_url=exercise["return_url"],
+                                     zip_url=exercise["zip_url"],
+                                     submissions_url=exercise[("exercise_"
+                                                               "submissions_"
+                                                               "url")])
+                ex.is_downloaded = os.path.isdir(ex.path())
+                ex.save()
+def get_conn(self):
+        """
+        Returns a FTP connection object
+        """
+        if self.conn is None:
+            params = self.get_connection(self.ftp_conn_id)
+            pasv = params.extra_dejson.get("passive", True)
+            self.conn = ftplib.FTP(params.host, params.login, params.password)
+            self.conn.set_pasv(pasv)
+
+        return self.conn
+def get_topic(self, topic_name):
+        '''
+        Retrieves the description for the specified topic.
+
+        topic_name:
+            Name of the topic.
+        '''
+        _validate_not_none('topic_name', topic_name)
+        request = HTTPRequest()
+        request.method = 'GET'
+        request.host = self._get_host()
+        request.path = '/' + _str(topic_name) + ''
+        request.path, request.query = self._httpclient._update_request_uri_query(request)  # pylint: disable=protected-access
+        request.headers = self._update_service_bus_header(request)
+        response = self._perform_request(request)
+
+        return _convert_response_to_topic(response)
+def resolve_expression(self, *args, **kwargs):
+        """Resolves expressions inside the dictionary."""
+
+        result = dict()
+        for key, value in self.value.items():
+            if hasattr(value, 'resolve_expression'):
+                result[key] = value.resolve_expression(
+                    *args, **kwargs)
+            else:
+                result[key] = value
+
+        return HStoreValue(result)
+def read_as_text(self):
+        '''Read and return the dataset contents as text.'''
+        return self.workspace._rest.read_intermediate_dataset_contents_text(
+            self.workspace.workspace_id,
+            self.experiment.experiment_id,
+            self.node_id,
+            self.port_name
+        )
+def _submit(self, client, config, osutil, request_executor, io_executor,
+                transfer_future, bandwidth_limiter=None):
+        """
+        :param client: The client associated with the transfer manager
+
+        :type config: s3transfer.manager.TransferConfig
+        :param config: The transfer config associated with the transfer
+            manager
+
+        :type osutil: s3transfer.utils.OSUtil
+        :param osutil: The os utility associated to the transfer manager
+
+        :type request_executor: s3transfer.futures.BoundedExecutor
+        :param request_executor: The request executor associated with the
+            transfer manager
+
+        :type io_executor: s3transfer.futures.BoundedExecutor
+        :param io_executor: The io executor associated with the
+            transfer manager
+
+        :type transfer_future: s3transfer.futures.TransferFuture
+        :param transfer_future: The transfer future associated with the
+            transfer request that tasks are being submitted for
+
+        :type bandwidth_limiter: s3transfer.bandwidth.BandwidthLimiter
+        :param bandwidth_limiter: The bandwidth limiter to use when
+            downloading streams
+        """
+        if transfer_future.meta.size is None:
+            # If a size was not provided figure out the size for the
+            # user.
+            response = client.head_object(
+                Bucket=transfer_future.meta.call_args.bucket,
+                Key=transfer_future.meta.call_args.key,
+                **transfer_future.meta.call_args.extra_args
+            )
+            transfer_future.meta.provide_transfer_size(
+                response['ContentLength'])
+
+        download_output_manager = self._get_download_output_manager_cls(
+            transfer_future, osutil)(osutil, self._transfer_coordinator,
+                                     io_executor)
+
+        # If it is greater than threshold do a ranged download, otherwise
+        # do a regular GetObject download.
+        if transfer_future.meta.size < config.multipart_threshold:
+            self._submit_download_request(
+                client, config, osutil, request_executor, io_executor,
+                download_output_manager, transfer_future, bandwidth_limiter)
+        else:
+            self._submit_ranged_download_request(
+                client, config, osutil, request_executor, io_executor,
+                download_output_manager, transfer_future, bandwidth_limiter)
+def delete(self, webhookId):
+        """Delete a webhook, by ID.
+
+        Args:
+            webhookId(basestring): The ID of the webhook to be deleted.
+
+        Raises:
+            TypeError: If the parameter types are incorrect.
+            ApiError: If the Webex Teams cloud returns an error.
+
+        """
+        check_type(webhookId, basestring, may_be_none=False)
+
+        # API request
+        self._session.delete(API_ENDPOINT + '/' + webhookId)
+def draw(self):
+        """
+        Redraws the menu and refreshes the screen. Should be called whenever something changes that needs to be redrawn.
+        """
+
+        self.screen.border(0)
+        if self.title is not None:
+            self.screen.addstr(2, 2, self.title, curses.A_STANDOUT)
+        if self.subtitle is not None:
+            self.screen.addstr(4, 2, self.subtitle, curses.A_BOLD)
+
+        for index, item in enumerate(self.items):
+            if self.current_option == index:
+                text_style = self.highlight
+            else:
+                text_style = self.normal
+            self.screen.addstr(5 + index, 4, item.show(index), text_style)
+
+        screen_rows, screen_cols = CursesMenu.stdscr.getmaxyx()
+        top_row = 0
+        if 6 + len(self.items) > screen_rows:
+            if screen_rows + self.current_option < 6 + len(self.items):
+                top_row = self.current_option
+            else:
+                top_row = 6 + len(self.items) - screen_rows
+
+        self.screen.refresh(top_row, 0, 0, 0, screen_rows - 1, screen_cols - 1)
+def convert_datetime_to_str(df, *, column: str, format: str, new_column: str = None):
+    """
+    Convert datetime column into string column
+
+    ---
+
+    ### Parameters
+
+    *mandatory :*
+    - column (*str*): name of the column to format
+    - format (*str*): format of the result values (see [available formats](
+    https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior))
+
+    *optional :*
+    - new_column (*str*): name of the output column. By default `column` is overwritten.
+    """
+    new_column = new_column or column
+    df[new_column] = df[column].dt.strftime(format)
+    return df
+def do_GEOHASHMEMBERS(self, geoh):
+        """Return members of a geohash and its neighbors.
+        GEOHASHMEMBERS u09vej04 [NEIGHBORS 0]"""
+        geoh, with_neighbors = self._match_option('NEIGHBORS', geoh)
+        key = compute_geohash_key(geoh, with_neighbors != '0')
+        if key:
+            for id_ in DB.smembers(key):
+                r = Result(id_)
+                print('{} {}'.format(white(r), blue(r._id)))
+def sll(sig, howMany) -> RtlSignalBase:
+    "Logical shift left"
+    width = sig._dtype.bit_length()
+    return sig[(width - howMany):]._concat(vec(0, howMany))
+def plot_boundaries(all_boundaries, est_file, algo_ids=None, title=None,
+                    output_file=None):
+    """Plots all the boundaries.
+
+    Parameters
+    ----------
+    all_boundaries: list
+        A list of np.arrays containing the times of the boundaries, one array
+        for each algorithm.
+    est_file: str
+        Path to the estimated file (JSON file)
+    algo_ids : list
+        List of algorithm ids to to read boundaries from.
+        If None, all algorithm ids are read.
+    title : str
+        Title of the plot. If None, the name of the file is printed instead.
+    """
+    import matplotlib.pyplot as plt
+    N = len(all_boundaries)  # Number of lists of boundaries
+    if algo_ids is None:
+        algo_ids = io.get_algo_ids(est_file)
+
+    # Translate ids
+    for i, algo_id in enumerate(algo_ids):
+        algo_ids[i] = translate_ids[algo_id]
+    algo_ids = ["GT"] + algo_ids
+
+    figsize = (6, 4)
+    plt.figure(1, figsize=figsize, dpi=120, facecolor='w', edgecolor='k')
+    for i, boundaries in enumerate(all_boundaries):
+        color = "b"
+        if i == 0:
+            color = "g"
+        for b in boundaries:
+            plt.axvline(b, i / float(N), (i + 1) / float(N), color=color)
+        plt.axhline(i / float(N), color="k", linewidth=1)
+
+    # Format plot
+    _plot_formatting(title, est_file, algo_ids, all_boundaries[0][-1], N,
+                     output_file)
+def plot(
+            self, data, bbox=None, plot_type='scatter',
+            fig_kwargs=None, bmap_kwargs=None, plot_kwargs=None,
+            cbar_kwargs=None):
+        """
+        Plot an array of data on a map using matplotlib and Basemap,
+        automatically matching the data to the Pandana network node positions.
+
+        Keyword arguments are passed to the plotting routine.
+
+        Parameters
+        ----------
+        data : pandas.Series
+            Numeric data with the same length and index as the nodes
+            in the network.
+        bbox : tuple, optional
+            (lat_min, lng_min, lat_max, lng_max)
+        plot_type : {'hexbin', 'scatter'}, optional
+        fig_kwargs : dict, optional
+            Keyword arguments that will be passed to
+            matplotlib.pyplot.subplots. Use this to specify things like
+            figure size or background color.
+        bmap_kwargs : dict, optional
+            Keyword arguments that will be passed to the Basemap constructor.
+            This can be used to specify a projection or coastline resolution.
+        plot_kwargs : dict, optional
+            Keyword arguments that will be passed to the matplotlib plotting
+            command used. Use this to control plot styles and color maps used.
+        cbar_kwargs : dict, optional
+            Keyword arguments passed to the Basemap.colorbar method.
+            Use this to control color bar location and label.
+
+        Returns
+        -------
+        bmap : Basemap
+        fig : matplotlib.Figure
+        ax : matplotlib.Axes
+
+        """
+        from mpl_toolkits.basemap import Basemap
+
+        fig_kwargs = fig_kwargs or {}
+        bmap_kwargs = bmap_kwargs or {}
+        plot_kwargs = plot_kwargs or {}
+        cbar_kwargs = cbar_kwargs or {}
+
+        if not bbox:
+            bbox = (
+                self.nodes_df.y.min(),
+                self.nodes_df.x.min(),
+                self.nodes_df.y.max(),
+                self.nodes_df.x.max())
+
+        fig, ax = plt.subplots(**fig_kwargs)
+
+        bmap = Basemap(
+            bbox[1], bbox[0], bbox[3], bbox[2], ax=ax, **bmap_kwargs)
+        bmap.drawcoastlines()
+        bmap.drawmapboundary()
+
+        x, y = bmap(self.nodes_df.x.values, self.nodes_df.y.values)
+
+        if plot_type == 'scatter':
+            plot = bmap.scatter(
+                x, y, c=data.values, **plot_kwargs)
+        elif plot_type == 'hexbin':
+            plot = bmap.hexbin(
+                x, y, C=data.values, **plot_kwargs)
+
+        bmap.colorbar(plot, **cbar_kwargs)
+
+        return bmap, fig, ax
+def isBin(self, type):
+        """
+        is the type a byte array value?
+
+        :param type: PKCS#11 type like `CKA_MODULUS`
+        :rtype: bool
+        """
+        return (not self.isBool(type)) \
+            and (not self.isString(type)) \
+            and (not self.isNum(type))
+def sanger_variants(self, institute_id=None, case_id=None):
+        """Return all variants with sanger information
+
+        Args:
+            institute_id(str)
+            case_id(str)
+
+        Returns:
+            res(pymongo.Cursor): A Cursor with all variants with sanger activity
+        """
+        query = {'validation': {'$exists': True}}
+        if institute_id:
+            query['institute_id'] = institute_id
+        if case_id:
+            query['case_id'] = case_id
+
+        return self.variant_collection.find(query)
+def create_submission(self, user_id, institute_id):
+        """Create an open clinvar submission for a user and an institute
+           Args:
+                user_id(str): a user ID
+                institute_id(str): an institute ID
+
+           returns:
+                submission(obj): an open clinvar submission object
+        """
+
+        submission_obj = {
+            'status' : 'open',
+            'created_at' : datetime.now(),
+            'user_id' : user_id,
+            'institute_id' : institute_id
+        }
+        LOG.info("Creating a new clinvar submission for user '%s' and institute %s", user_id, institute_id)
+        result = self.clinvar_submission_collection.insert_one(submission_obj)
+        return result.inserted_id
+def _all_get_or_create_table(self, where, tablename, description, expectedrows=None):
+        """Creates a new table, or if the table already exists, returns it."""
+        where_node = self._hdf5file.get_node(where)
+
+        if not tablename in where_node:
+            if not expectedrows is None:
+                table = self._hdf5file.create_table(where=where_node, name=tablename,
+                                              description=description, title=tablename,
+                                              expectedrows=expectedrows,
+                                              filters=self._all_get_filters())
+            else:
+                table = self._hdf5file.create_table(where=where_node, name=tablename,
+                                              description=description, title=tablename,
+                                              filters=self._all_get_filters())
+        else:
+            table = where_node._f_get_child(tablename)
+
+        return table
+def set_many(self, new_values):
+        # type: (Iterable[B]) -> Callable[[S], T]
+        '''Set many foci to values taken by iterating over `new_values`.
+
+            >>> from lenses import lens
+            >>> lens.Each().set_many(range(4, 7))([0, 1, 2])
+            [4, 5, 6]
+        '''
+
+        def setter_many(state):
+            return self._optic.iterate(state, new_values)
+
+        return setter_many
+def optimise_signal(self, analytes, min_points=5,
+                        threshold_mode='kde_first_max',
+                        threshold_mult=1., x_bias=0, filt=True,
+                        weights=None, mode='minimise',
+                        samples=None, subset=None):
+        """
+        Optimise data selection based on specified analytes.
+
+        Identifies the longest possible contiguous data region in
+        the signal where the relative standard deviation (std) and
+        concentration of all analytes is minimised.
+
+        Optimisation is performed via a grid search of all possible
+        contiguous data regions. For each region, the mean std and
+        mean scaled analyte concentration ('amplitude') are calculated.
+
+        The size and position of the optimal data region are identified
+        using threshold std and amplitude values. Thresholds are derived
+        from all calculated stds and amplitudes using the method specified
+        by `threshold_mode`. For example, using the 'kde_max' method, a
+        probability density function (PDF) is calculated for std and
+        amplitude values, and the threshold is set as the maximum of the
+        PDF. These thresholds are then used to identify the size and position
+        of the longest contiguous region where the std is below the threshold,
+        and the amplitude is either below the threshold.
+
+        All possible regions of the data that have at least
+        `min_points` are considered.
+
+        For a graphical demonstration of the action of signal_optimiser,
+        use `optimisation_plot`.
+
+        Parameters
+        ----------
+        d : latools.D object
+            An latools data object.
+        analytes : str or array-like
+            Which analytes to consider.
+        min_points : int
+            The minimum number of contiguous points to
+            consider.
+        threshold_mode : str
+            The method used to calculate the optimisation
+            thresholds. Can be 'mean', 'median', 'kde_max'
+            or 'bayes_mvs', or a custom function. If a
+            function, must take a 1D array, and return a
+            single, real number.
+        weights : array-like of length len(analytes)
+            An array of numbers specifying the importance of
+            each analyte considered. Larger number makes the
+            analyte have a greater effect on the optimisation.
+            Default is None.
+        """
+        if samples is not None:
+            subset = self.make_subset(samples)
+        samples = self._get_samples(subset)
+
+        if isinstance(analytes, str):
+            analytes = [analytes]
+
+        self.minimal_analytes.update(analytes)
+
+        errs = []
+
+        with self.pbar.set(total=len(samples), desc='Optimising Data selection') as prog:
+            for s in samples:
+                e = self.data[s].signal_optimiser(analytes=analytes, min_points=min_points,
+                                                  threshold_mode=threshold_mode, threshold_mult=threshold_mult,
+                                                  x_bias=x_bias, weights=weights, filt=filt, mode=mode)
+                if e != '':
+                    errs.append(e)
+                prog.update()
+
+        if len(errs) > 0:
+            print('\nA Few Problems:\n' + '\n'.join(errs) + '\n\n  *** Check Optimisation Plots ***')
+def tag_to_text(tag):
+    """
+    :param tag: Beautiful soup tag
+    :return: Flattened text
+    """
+    out = []
+    for item in tag.contents:
+        # If it has a name, it is a tag
+        if item.name:
+            out.append(tag_to_text(item))
+        else:
+            # Just text!
+            out.append(item)
+
+    return ' '.join(out)
+def repository_exists(self, workspace, repo):
+        """Return True if workspace contains repository name."""
+        if not self.exists(workspace):
+            return False
+
+        workspaces = self.list()
+        return repo in workspaces[workspace]["repositories"]
+def shutdown(self):
+        '''
+        send SIGTERM to the tagger child process
+        '''
+        if self._child:
+            try:
+                self._child.terminate()
+            except OSError, exc:
+                if exc.errno == 3:
+                    ## child is already gone, possibly because it ran
+                    ## out of memory and caused us to shutdown
+                    pass
+def Geometry(*args, **kwargs):
+    """Returns an ogr.Geometry instance optionally created from a geojson str
+    or dict. The spatial reference may also be provided.
+    """
+    # Look for geojson as a positional or keyword arg.
+    arg = kwargs.pop('geojson', None) or len(args) and args[0]
+    try:
+        srs = kwargs.pop('srs', None) or arg.srs.wkt
+    except AttributeError:
+        srs = SpatialReference(4326)
+    if hasattr(arg, 'keys'):
+        geom = ogr.CreateGeometryFromJson(json.dumps(arg))
+    elif hasattr(arg, 'startswith'):
+        # WKB as hexadecimal string.
+        char = arg[0] if arg else ' '
+        i = char if isinstance(char, int) else ord(char)
+        if i in (0, 1):
+            geom = ogr.CreateGeometryFromWkb(arg)
+        elif arg.startswith('{'):
+            geom = ogr.CreateGeometryFromJson(arg)
+        elif arg.startswith('<gml'):
+            geom = ogr.CreateGeometryFromGML(arg)
+        else:
+            raise ValueError('Invalid geometry value: %s' % arg)
+    elif hasattr(arg, 'wkb'):
+        geom = ogr.CreateGeometryFromWkb(bytes(arg.wkb))
+    else:
+        geom = ogr.Geometry(*args, **kwargs)
+    if geom:
+        if not isinstance(srs, SpatialReference):
+            srs = SpatialReference(srs)
+        geom.AssignSpatialReference(srs)
+    return geom
+def argument_parser(args):
+    """Argparse logic, command line options.
+
+    Args:
+        args: sys.argv[1:], everything passed to the program after its name
+
+    Returns:
+        A tuple of:
+            a list of words/letters to search
+            a boolean to declare if we want to use the sowpods words file
+            a boolean to declare if we want to output anagrams by length
+            a string of starting characters to find anagrams based on
+            a string of ending characters to find anagrams based on
+
+    Raises:
+        SystemExit if the user passes invalid arguments, --version or --help
+    """
+
+    parser = argparse.ArgumentParser(
+        prog="nagaram",
+        description="Finds Scabble anagrams.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        add_help=False,
+    )
+
+    parser.add_argument(
+        "-h", "--help",
+        dest="help",
+        action="store_true",
+        default=False,
+    )
+
+    parser.add_argument(
+        "--sowpods",
+        dest="sowpods",
+        action="store_true",
+        default=False,
+    )
+
+    parser.add_argument(
+        "--length",
+        "-l",
+        dest="length",
+        action="store_true",
+        default=False,
+    )
+
+    parser.add_argument(
+        "--starts-with",
+        "-s",
+        dest="starts_with",
+        metavar="chars",
+        default="",
+        nargs=1,
+        type=str,
+    )
+
+    parser.add_argument(
+        "--ends-with",
+        "-e",
+        dest="ends_with",
+        metavar="chars",
+        default="",
+        nargs=1,
+        type=str,
+    )
+
+    parser.add_argument(
+        "--version",
+        "-v",
+        action="version",
+        version="Nagaram {0} (Released: {1})".format(
+            nagaram.__version__,
+            nagaram.__release_date__,
+        )
+    )
+
+    parser.add_argument(
+        dest="wordlist",
+        metavar="letters to find anagrams with (? for anything, _ for blanks)",
+        nargs=argparse.REMAINDER,
+    )
+
+    settings = parser.parse_args(args)
+
+    if settings.help:
+        raise SystemExit(nagaram.__doc__.strip())
+
+    if not settings.wordlist:
+        raise SystemExit(parser.print_usage())
+
+    if settings.starts_with:
+        settings.starts_with = settings.starts_with[0]
+    if settings.ends_with:
+        settings.ends_with = settings.ends_with[0]
+
+    return (settings.wordlist, settings.sowpods, settings.length,
+            settings.starts_with, settings.ends_with)
