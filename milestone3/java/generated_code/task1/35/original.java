@@ -1,0 +1,32 @@
+public static void authorizeAccount(final BraintreeFragment fragment, final boolean vault, final String profileId) {
+        fragment.waitForConfiguration(new ConfigurationListener() {
+            @Override
+            public void onConfigurationFetched(Configuration configuration) {
+                fragment.sendAnalyticsEvent("pay-with-venmo.selected");
+
+                String venmoProfileId = profileId;
+                if (TextUtils.isEmpty(venmoProfileId)) {
+                    venmoProfileId = configuration.getPayWithVenmo().getMerchantId();
+                }
+
+                String exceptionMessage = "";
+                if (!configuration.getPayWithVenmo().isAccessTokenValid()) {
+                    exceptionMessage = "Venmo is not enabled";
+                } else if (!Venmo.isVenmoInstalled(fragment.getApplicationContext())) {
+                    exceptionMessage = "Venmo is not installed";
+                }
+
+                if (!TextUtils.isEmpty(exceptionMessage)) {
+                    fragment.postCallback(new AppSwitchNotAvailableException(exceptionMessage));
+                    fragment.sendAnalyticsEvent("pay-with-venmo.app-switch.failed");
+                } else {
+                    persistVenmoVaultOption(vault && fragment.getAuthorization() instanceof ClientToken,
+                            fragment.getApplicationContext());
+
+                    fragment.startActivityForResult(getLaunchIntent(configuration.getPayWithVenmo(), venmoProfileId, fragment),
+                            BraintreeRequestCodes.VENMO);
+                    fragment.sendAnalyticsEvent("pay-with-venmo.app-switch.started");
+                }
+            }
+        });
+    }
