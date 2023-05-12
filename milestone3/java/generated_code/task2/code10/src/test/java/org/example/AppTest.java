@@ -31,4 +31,11 @@ public class AppTest
         App.bootstrap("test-dsn", Optional.of("test-tags"), false);
         assertEquals("Logger level should be INFO", Level.INFO, App.logger.getLevel());
     }
+
+
+//    @Test
+//    public void testBootstrapWithFalseCleanRootLogger1() {
+//        App.bootstrap1("test-dsn", Optional.of("test-tags"), false);
+//        assertEquals("Logger level should be INFO", Level.INFO, App.logger.getLevel());
+//    }
 }
