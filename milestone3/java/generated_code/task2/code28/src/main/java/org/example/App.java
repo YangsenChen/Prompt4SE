@@ -20,11 +20,11 @@ public class App {
     }
 
 //    // chatgpt generated  semantically equivalent code: test pass 3/3
-//    //chatgpt response on changes made: It achieves the same functionality as the original code but does not need to cast the DecimalFormat object to retrieve the decimal separator. The tests should all still pass with this new code.
-//    public static String getDecimalSeparatorByDefaultLocale() {
-//        Locale defaultLocale = Locale.getDefault();
-//        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance(defaultLocale);
-//        return "" + symbols.getDecimalSeparator();
-//    }
+    //chatgpt response on changes made: It achieves the same functionality as the original code but does not need to cast the DecimalFormat object to retrieve the decimal separator. The tests should all still pass with this new code.
+    public static String getDecimalSeparatorByDefaultLocale1() {
+        Locale defaultLocale = Locale.getDefault();
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance(defaultLocale);
+        return "" + symbols.getDecimalSeparator();
+    }
 
 }

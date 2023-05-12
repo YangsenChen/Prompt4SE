@@ -1,6 +1,7 @@
 package org.example;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 class FitRowParent {
     public void doRow(FitRow row) throws Exception {
@@ -17,6 +18,8 @@ class FitRow extends FitRowParent {
 
     public List<Cell> cells() {
         return this.cells;
+//        return Collections.emptyList();
+
     }
 }
 

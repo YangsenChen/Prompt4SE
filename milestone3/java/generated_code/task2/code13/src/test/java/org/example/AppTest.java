@@ -67,4 +67,21 @@ public class AppTest
 //        Main main = new Main();
 //        main.write(response, "Hello world!");
 //    }
+
+    @Test
+    public void testWrite1() throws IOException {
+        // Create a mock HttpServletResponse object for testing purposes
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        HttpServletResponse response = new MockHttpServletResponse(outputStream);
+
+        // Create a StreamHandler object containing some data to send to the client
+        StreamHandler<String> handler = new StreamHandler<>("Hello world!");
+
+        // Write the data in the StreamHandler to the response output stream
+        App main = new App();
+        main.write1(response, handler);
+
+        // Check that the output stream contains the expected data
+        assertEquals("Hello world!", outputStream.toString());
+    }
 }
