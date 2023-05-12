@@ -1,12 +1,9 @@
 package org.example;
 
 
-import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static jdk.internal.org.objectweb.asm.util.CheckClassAdapter.verify;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class App {
 

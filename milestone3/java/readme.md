@@ -1,4 +1,7 @@
-for task2 mutation test, the code dataset is chosen as below, where test cases are successfully generated and passed
+for task 1, the dataset is the same 50 as in milestone2 as required.
+
+
+for task2 mutation test, the sequence number of code in the dataset is chosen as below, totally 25 codes where test cases are successfully generated and passed
 
 ['1', '4', '6', '7', '8', '10', 
 
@@ -10,10 +13,7 @@ for task2 mutation test, the code dataset is chosen as below, where test cases a
 
 '40', '44', '45', '49']
 
-<plugin>
-  <groupId>org.pitest</groupId>
-  <artifactId>pitest-maven</artifactId>
-  <version>1.13.0</version>
-</plugin>
-
+to run the mutation test, run the following command in the root directory of each code project
 mvn test-compile org.pitest:pitest-maven:mutationCoverage
+
+the report is already generated in the target\pit-reports\ folder and can be viewed in the browser

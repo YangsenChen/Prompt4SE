@@ -2,7 +2,7 @@ import os
 import json
 import openai
 
-for file_number in range(19, 51):
+for file_number in range(1, 51):
     file_number = str(file_number)
     folder_path = "generated_code/task1/"+file_number
     for file_name in os.listdir(folder_path):
