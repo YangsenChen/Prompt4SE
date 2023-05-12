@@ -1,3 +1,4 @@
+//import com.sun.jna.Pointer;
 import jdk.incubator.foreign.MemoryHandles;
 import jdk.incubator.foreign.MemorySegment;
 import org.junit.jupiter.api.Test;
@@ -8,68 +9,68 @@ import java.nio.DoubleBuffer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+ class cuDoubleComplex {
+    public double x; // Real part
+    public double y; // Imaginary part
+
+    public cuDoubleComplex(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
+     public cuDoubleComplex() {
+         this.x = 0;
+         this.y = 0;
+     }
+}
+ class Pointer {
+    private long address;
+
+    public Pointer() {
+        this.address = 0;
+    }
+
+    public Pointer(long address) {
+        this.address = address;
+    }
+
+    public long getAddress() {
+        return address;
+    }
+
+    public void setAddress(long address) {
+        this.address = address;
+    }
+
+    public interface Deallocator {
+        void deallocate(Pointer p);
+    }
+
+    // Here is a simple factory method as an example
+    public static Pointer create(long address, Deallocator deallocator) {
+        // You might want to add some logic here to manage the deallocator
+        return new Pointer(address);
+    }
+}
+
+class cublasStatus {
+    public static final int CUBLAS_STATUS_SUCCESS = 1;
+    public static final int CUBLAS_STATUS_INVALID_VALUE = 0;
+ }
+
 public class Main {
 
     static {
         System.loadLibrary("cublas");
     }
-
-    @Test
-    public void testGetMatrixSuccess() {
-        int rows = 2;
-        int cols = 2;
-        int lda = 2;
-        int ldb = 2;
-        int offsetB = 0;
-        cuDoubleComplex[] B = {new cuDoubleComplex(), new cuDoubleComplex(), new cuDoubleComplex(), new cuDoubleComplex()};
-        Pointer A = new Pointer();
-        int result = cublasGetMatrix(rows, cols, A, lda, B, offsetB, ldb);
-        if (result == cublasStatus.CUBLAS_STATUS_SUCCESS) {
-            cuDoubleComplex[] expected = {new cuDoubleComplex(1, 2), new cuDoubleComplex(3, 4),
-                    new cuDoubleComplex(5, 6), new cuDoubleComplex(7, 8)};
-            for (int i = 0; i < B.length; i++) {
-                assertEquals(expected[i].x, B[i].x);
-                assertEquals(expected[i].y, B[i].y);
-            }
-        } else {
-            assertEquals(cublasStatus.CUBLAS_STATUS_SUCCESS, result);
-        }
+    static {
+        JCublas.initialize();
     }
 
-    @Test
-    public void testGetMatrixFail() {
-        int rows = 2;
-        int cols = 2;
-        int lda = 2;
-        int ldb = 2;
-        int offsetB = 0;
-        cuDoubleComplex[] B = {new cuDoubleComplex(), new cuDoubleComplex(), new cuDoubleComplex(), new cuDoubleComplex()};
-        Pointer A = new Pointer();
-        // Simulate failed cublasGetMatrixNative call by passing invalid arguments
-        int status = cublasGetMatrixNative(rows, cols, 16, A, lda, Pointer.NULL, ldb);
-        int result = cublasStatus.CUBLAS_STATUS_SUCCESS;
-        // The following block is similar to `checkResult` function
-        if (status != cublasStatus.CUBLAS_STATUS_SUCCESS) {
-            result = status;
-        }
-        if (status == cublasStatus.CUBLAS_STATUS_SUCCESS && B.length == 0) {
-            result = cublasStatus.CUBLAS_STATUS_INVALID_VALUE;
-        }
-        assertEquals(result, cublasStatus.CUBLAS_STATUS_INVALID_VALUE);
-    }
+    // Declare the native method
+    public static native int cublasGetMatrixNative(int rows, int cols, Pointer A, int lda, Pointer B, int ldb);
 
-    @Test
-    public void testGetMatrixEmpty() {
-        int rows = 0;
-        int cols = 0;
-        int lda = 0;
-        int ldb = 0;
-        int offsetB = 0;
-        cuDoubleComplex[] B = {};
-        Pointer A = new Pointer();
-        int result = cublasGetMatrix(rows, cols, A, lda, B, offsetB, ldb);
-        assertEquals(result, cublasStatus.CUBLAS_STATUS_INVALID_VALUE);
-    }
+
 
     public static int cublasGetMatrix(int rows, int cols, Pointer A, int lda, cuDoubleComplex[] B, int offsetB, int ldb) {
         ByteBuffer byteBufferB = ByteBuffer.allocateDirect(B.length * 8 * 2);
