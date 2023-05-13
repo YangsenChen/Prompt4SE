@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MutPy mutation report - mutation #4</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    
+<link href="http://alexgorbatchev.com/pub/sh/current/styles/shCore.css" rel="stylesheet" type="text/css" />
+<link href="http://alexgorbatchev.com/pub/sh/current/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    
+<script src="http://alexgorbatchev.com/pub/sh/current/scripts/shCore.js" type="text/javascript"></script>
+<script src="http://alexgorbatchev.com/pub/sh/current/scripts/shBrushPython.js" type="text/javascript"></script>
+<script type="text/javascript">
+    SyntaxHighlighter.all();
+    window.setTimeout(function () {
+        
+        $('.line.number66').attr('title', 'ROR');
+        
+    }, 0);
+</script>
+
+</head>
+<body>
+    <div class="container">
+        
+<div class="page-header">
+    <h1>Mutation #4</h1>
+</div>
+<h3>Details</h3>
+<ul>
+    <li>module - <code><module 'code_04' from '/mnt/c/Users/Yangsen/Desktop/cs598/milestone3/python/generated_code/code_04/./code_04.py'></code></li>
+    <li><span class="label label-danger">survived</span></li>
+    
+    <li>duration - 1.006 s</li>
+    
+    
+    <li>tests run - 3</li>
+    
+</ul>
+
+<h3>Mutations</h3>
+<ul>
+    
+    <li>ROR - line 66</li>
+    
+</ul>
+<h3>Mutant</h3>
+<pre class="brush: python; first-line: 17; highlight: [66]; toolbar: false;">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import logging
+import concurrent.futures
+
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+
+class TaskManager:
+    def __init__(self):
+        
+        self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
+        self.tasks = {}
+    
+    def add_task(self, fn, *args, **kwargs):
+        '''Add a task to the task list.'''
+        future = self.executor.submit(fn, *args, **kwargs)
+        task_id = id(future)
+        self.tasks[task_id] = {'app_fu': future}
+        return task_id
+    
+    def wait_for_current_tasks(self):
+        '''Waits for all tasks in the task list to be completed, by waiting for their
+        AppFuture to be completed. This method will not necessarily wait for any tasks
+        added after cleanup has started (such as data stageout?)
+        '''
+        logger.info('Waiting for all remaining tasks to complete')
+        for task_id in self.tasks:
+            
+            
+            fut = self.tasks[task_id]['app_fu']
+            if not (fut.done()):
+                logger.debug('Waiting for task {} to complete'.format(task_id))
+                fut.exception()
+        logger.info('All remaining tasks completed')
+
+
+
+def main():
+    task_manager = TaskManager()
+    
+    
+    for i in range(10):
+        task_manager.add_task(sum, range(i))
+    
+    
+    task_manager.wait_for_current_tasks()
+
+
+if __name__ != '__main__':
+    main()</pre>
+
+    </div>
+</body>
+</html>
