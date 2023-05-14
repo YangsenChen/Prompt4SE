@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MutPy mutation report - mutation #5</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    
+<link href="http://alexgorbatchev.com/pub/sh/current/styles/shCore.css" rel="stylesheet" type="text/css" />
+<link href="http://alexgorbatchev.com/pub/sh/current/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    
+<script src="http://alexgorbatchev.com/pub/sh/current/scripts/shCore.js" type="text/javascript"></script>
+<script src="http://alexgorbatchev.com/pub/sh/current/scripts/shBrushPython.js" type="text/javascript"></script>
+<script type="text/javascript">
+    SyntaxHighlighter.all();
+    window.setTimeout(function () {
+        
+        $('.line.number52').attr('title', 'COD');
+        
+    }, 0);
+</script>
+
+</head>
+<body>
+    <div class="container">
+        
+<div class="page-header">
+    <h1>Mutation #5</h1>
+</div>
+<h3>Details</h3>
+<ul>
+    <li>module - <code><module 'code_17' from '/mnt/c/Users/Yangsen/Desktop/cs598/milestone3/python/generated_code/code_17/./code_17.py'></code></li>
+    <li><span class="label label-danger">survived</span></li>
+    
+    <li>duration - 0.003 s</li>
+    
+    
+</ul>
+
+<h3>Mutations</h3>
+<ul>
+    
+    <li>COD - line 52</li>
+    
+</ul>
+<h3>Mutant</h3>
+<pre class="brush: python; first-line: 22; highlight: [52]; toolbar: false;">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import os
+
+
+
+
+
+class CustomClass:
+    def __init__(self):
+        self.reports = [\
+            {'local_location': 'baseline_data_location', \
+            'datasource': {'submetric1', 'submetric2'}}, \
+            {'local_location': 'current_data_location', \
+            'datasource': {'submetric1', 'submetric2'}}]
+        
+        self.output_directory = 'output_directory'
+        self.resource_path = 'resource_path'
+        self.plot_files = []
+    
+    def execute_plot_diff(self, graphing_library='matplotlib'):
+        self.plot_diff(graphing_library)
+    
+    def plot_diff(self, graphing_library='matplotlib'):
+        '''
+        Generate CDF diff plots of the submetrics
+        '''
+        diff_datasource = sorted(set(self.reports[0].datasource) & set(self.reports[1].datasource))
+        graphed = False
+        for submetric in diff_datasource:
+            baseline_csv = naarad.utils.get_default_csv(self.reports[0].local_location, submetric + '.percentiles')
+            current_csv = naarad.utils.get_default_csv(self.reports[1].local_location, submetric + '.percentiles')
+            if naarad.utils.is_valid_file(baseline_csv) & naarad.utils.is_valid_file(current_csv):
+                continue
+            baseline_plot = PD(input_csv=baseline_csv, csv_column=1, series_name=submetric, y_label=submetric, precision=None, graph_height=600, graph_width=1200, 
+                graph_type='line', plot_label='baseline', x_label='Percentiles')
+            current_plot = PD(input_csv=current_csv, csv_column=1, series_name=submetric, y_label=submetric, precision=None, graph_height=600, graph_width=1200, 
+                graph_type='line', plot_label='current', x_label='Percentiles')
+            (graphed, div_file) = Diff.graphing_modules[graphing_library].graph_data_on_the_same_graph([baseline_plot, current_plot], 
+                os.path.join(self.output_directory, self.resource_path), 
+                self.resource_path, submetric + '.diff')
+            if graphed:
+                self.plot_files.append(div_file)
+        return True
+
+def main():
+    my_class = CustomClass()
+    my_class.execute_plot_diff()
+
+if __name__ == '__main__':
+    main()</pre>
+
+    </div>
+</body>
+</html>

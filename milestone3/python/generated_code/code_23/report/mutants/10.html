@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MutPy mutation report - mutation #10</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    
+<link href="http://alexgorbatchev.com/pub/sh/current/styles/shCore.css" rel="stylesheet" type="text/css" />
+<link href="http://alexgorbatchev.com/pub/sh/current/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    
+<script src="http://alexgorbatchev.com/pub/sh/current/scripts/shCore.js" type="text/javascript"></script>
+<script src="http://alexgorbatchev.com/pub/sh/current/scripts/shBrushPython.js" type="text/javascript"></script>
+<script type="text/javascript">
+    SyntaxHighlighter.all();
+    window.setTimeout(function () {
+        
+        $('.line.number73').attr('title', 'ROR');
+        
+    }, 0);
+</script>
+
+</head>
+<body>
+    <div class="container">
+        
+<div class="page-header">
+    <h1>Mutation #10</h1>
+</div>
+<h3>Details</h3>
+<ul>
+    <li>module - <code><module 'code_23' from '/mnt/c/Users/Yangsen/Desktop/cs598/milestone3/python/generated_code/code_23/./code_23.py'></code></li>
+    <li><span class="label label-warning">incompetent</span></li>
+    
+    
+</ul>
+
+<h3>Mutations</h3>
+<ul>
+    
+    <li>ROR - line 73</li>
+    
+</ul>
+<h3>Mutant</h3>
+<pre class="brush: python; first-line: 12; highlight: [73]; toolbar: false;">
+
+
+
+
+
+
+
+
+
+
+from threading import Lock
+import time
+from watchdog.observers import Observer
+
+class DirectoryMonitor:
+    
+    def __init__(self):
+        self._observer = Observer()
+        self._running = False
+        self._status_lock = Lock()
+        self._origin_mapped_data = dict()
+    
+    def stop(self):
+        '''
+        Stops monitoring the predefined directory.
+        '''
+        with self._status_lock:
+            if self._running:
+                assert self._observer is not None
+                self._observer.stop()
+                self._running = False
+                self._origin_mapped_data = dict()
+    
+    def start(self):
+        '''
+        Starts monitoring the predefined directory.
+        '''
+        with self._status_lock:
+            if not (self._running):
+                self._observer.start()
+                self._running = True
+    
+    def setup_observer(self, directory, event_handler):
+        '''
+        Sets up the observer to monitor the directory with the given event handler.
+        '''
+        self._observer.schedule(event_handler, directory, recursive=True)
+
+def main():
+    import sys
+    from watchdog.events import FileSystemEventHandler
+    
+    if len(sys.argv) < 2:
+        print('Usage: python script.py [directory_to_monitor]')
+        return
+    
+    directory_to_monitor = sys.argv[1]
+    
+    monitor = DirectoryMonitor()
+    event_handler = FileSystemEventHandler()
+    monitor.setup_observer(directory_to_monitor, event_handler)
+    monitor.start()
+    
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        monitor.stop()
+
+if __name__ != '__main__':
+    main()</pre>
+
+    </div>
+</body>
+</html>

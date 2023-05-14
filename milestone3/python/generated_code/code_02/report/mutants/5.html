@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MutPy mutation report - mutation #5</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    
+<link href="http://alexgorbatchev.com/pub/sh/current/styles/shCore.css" rel="stylesheet" type="text/css" />
+<link href="http://alexgorbatchev.com/pub/sh/current/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    
+<script src="http://alexgorbatchev.com/pub/sh/current/scripts/shCore.js" type="text/javascript"></script>
+<script src="http://alexgorbatchev.com/pub/sh/current/scripts/shBrushPython.js" type="text/javascript"></script>
+<script type="text/javascript">
+    SyntaxHighlighter.all();
+    window.setTimeout(function () {
+        
+        $('.line.number31').attr('title', 'IOD');
+        
+    }, 0);
+</script>
+
+</head>
+<body>
+    <div class="container">
+        
+<div class="page-header">
+    <h1>Mutation #5</h1>
+</div>
+<h3>Details</h3>
+<ul>
+    <li>module - <code><module 'code_02' from '/mnt/c/Users/Yangsen/Desktop/cs598/milestone3/python/generated_code/code_02/./code_02.py'></code></li>
+    <li><span class="label label-success">killed</span> by <code>test_get (test_code_02.TestMainHandler)</code></li>
+    
+    <li>duration - 0.012 s</li>
+    
+    
+    <li>tests run - 1</li>
+    
+</ul>
+
+<h3>Exception traceback</h3>
+<pre>Traceback (most recent call last):
+  File "/home/yangsen/anaconda3/lib/python3.9/site-packages/tornado/testing.py", line 98, in __call__
+    result = self.orig_method(*args, **kwargs)
+  File "/home/yangsen/anaconda3/lib/python3.9/site-packages/tornado/testing.py", line 599, in post_coroutine
+    return self.io_loop.run_sync(
+  File "/home/yangsen/anaconda3/lib/python3.9/site-packages/tornado/ioloop.py", line 530, in run_sync
+    return future_cell[0].result()
+  File "/mnt/c/Users/Yangsen/Desktop/cs598/milestone3/python/generated_code/code_02/./test_code_02.py", line 47, in test_get
+    response = await self.http_client.fetch(self.get_url('/test_cluster/test_environ/test_topology/test_instance'))
+tornado.httpclient.HTTPClientError: HTTP 405: Method Not Allowed
+</pre>
+
+<h3>Mutations</h3>
+<ul>
+    
+    <li>IOD - line 31</li>
+    
+</ul>
+<h3>Mutant</h3>
+<pre class="brush: python; first-line: 1; highlight: [31]; toolbar: false;">import json
+import tornado.web
+import tornado.escape
+import tornado.ioloop
+
+class Access:
+    
+    @staticmethod
+    def get_physical_plan(cluster, environ, topology):return {\
+            'stmgrs': {\
+            'stmgrId1': {\
+            'host': 'localhost'}}, \
+            \
+            \
+            'instances': {\
+            'instance1': {\
+            'stmgrId': 'stmgrId1'}}}
+    
+    
+    
+    
+    
+    @staticmethod
+    def get_instance_pid(cluster, environ, topology, instance):return json.dumps({\
+            'command': 'echo "Hello, World!"', \
+            'stdout': 'Hello, World!'})
+
+
+
+class MainHandler(tornado.web.RequestHandler):
+    pass
+
+
+
+
+
+
+
+
+
+
+
+def make_app():
+    return tornado.web.Application([\
+        ('/get/(\\w+)/(\\w+)/(\\w+)/(\\w+)', MainHandler)])
+
+
+
+if __name__ == '__main__':
+    app = make_app()
+    app.listen(8888)
+    tornado.ioloop.IOLoop.current().start()</pre>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MutPy mutation report - mutation #2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    
+<link href="http://alexgorbatchev.com/pub/sh/current/styles/shCore.css" rel="stylesheet" type="text/css" />
+<link href="http://alexgorbatchev.com/pub/sh/current/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    
+<script src="http://alexgorbatchev.com/pub/sh/current/scripts/shCore.js" type="text/javascript"></script>
+<script src="http://alexgorbatchev.com/pub/sh/current/scripts/shBrushPython.js" type="text/javascript"></script>
+<script type="text/javascript">
+    SyntaxHighlighter.all();
+    window.setTimeout(function () {
+        
+        $('.line.number38').attr('title', 'COI');
+        
+    }, 0);
+</script>
+
+</head>
+<body>
+    <div class="container">
+        
+<div class="page-header">
+    <h1>Mutation #2</h1>
+</div>
+<h3>Details</h3>
+<ul>
+    <li>module - <code><module 'code_06' from '/mnt/c/Users/Yangsen/Desktop/cs598/milestone3/python/generated_code/code_06/./code_06.py'></code></li>
+    <li><span class="label label-success">killed</span> by <code>test_set_fee_asset_with_asset (test_code_06.TestOperations)</code></li>
+    
+    <li>duration - 0.008 s</li>
+    
+    
+    <li>tests run - 2</li>
+    
+</ul>
+
+<h3>Exception traceback</h3>
+<pre>Traceback (most recent call last):
+  File "/mnt/c/Users/Yangsen/Desktop/cs598/milestone3/python/generated_code/code_06/./test_code_06.py", line 18, in test_set_fee_asset_with_asset
+    self.assertEqual(self.op.fee_asset_id, "1.3.2")
+AssertionError: <code_06.Operations.Asset object at 0x7f23b920f910> != '1.3.2'
+</pre>
+
+<h3>Mutations</h3>
+<ul>
+    
+    <li>COI - line 38</li>
+    
+</ul>
+<h3>Mutant</h3>
+<pre class="brush: python; first-line: 13; highlight: [38]; toolbar: false;">
+
+
+
+
+
+
+
+
+
+
+
+class Operations:
+    class Amount:
+        def __init__(self, asset_id):
+            self._info = {'id': asset_id}
+        
+        def __getitem__(self, key):
+            return self._info[key]
+    
+    class Asset:
+        def __init__(self, asset_id):
+            self._info = {'id': asset_id}
+        
+        def __getitem__(self, key):
+            return self._info[key]
+    
+    def __init__(self):
+        self.amount_class = self.Amount
+        self.asset_class = self.Asset
+        self.fee_asset_id = '1.3.0'
+    
+    def set_fee_asset(self, fee_asset):
+        ''' Set asset to fee
+        '''
+        if isinstance(fee_asset, self.amount_class):
+            self.fee_asset_id = fee_asset['id']
+        elif not (isinstance(fee_asset, self.asset_class)):
+            self.fee_asset_id = fee_asset['id']
+        elif fee_asset:
+            self.fee_asset_id = fee_asset
+        else:
+            self.fee_asset_id = '1.3.0'
+
+
+def main():
+    op = Operations()
+    
+    fee_asset_1 = op.Amount('1.3.1')
+    op.set_fee_asset(fee_asset_1)
+    print(f'Updated fee asset ID: {op.fee_asset_id}')
+    
+    fee_asset_2 = op.Asset('1.3.2')
+    op.set_fee_asset(fee_asset_2)
+    print(f'Updated fee asset ID: {op.fee_asset_id}')
+    
+    fee_asset_3 = '1.3.3'
+    op.set_fee_asset(fee_asset_3)
+    print(f'Updated fee asset ID: {op.fee_asset_id}')
+    
+    op.set_fee_asset(None)
+    print(f'Updated fee asset ID: {op.fee_asset_id}')
+
+
+if __name__ == '__main__':
+    main()</pre>
+
+    </div>
+</body>
+</html>
