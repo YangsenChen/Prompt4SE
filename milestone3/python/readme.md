@@ -1,6 +1,6 @@
 Task 1 dataset under datasets/ directory, results under chat_history/task1
 
-Task 2 using Mutpy, data under generated_code/ and result under chat_history/task2 and with advanced prompts under buggy_results/
+Task 2 using Mutpy, data under generated_code/ and result under chat_history/task2 and with advanced prompts under buggy_results/, .py files can be used to reproduce the results
 
 25 runnable files with test cases passed, used for task2 mutations
 
