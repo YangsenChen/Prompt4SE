@@ -4,49 +4,7 @@ def get_recovered_variables_for_magbin(simbasedir, \
     inveta_stdev_min=2.0, \
     iqr_stdev_min=2.0, \
     statsonly=True):
-    """This runs variability selection for the given magbinmedian.
 
-    To generate a full recovery matrix over all magnitude bins, run this
-    function for each magbin over the specified stetson_stdev_min and
-    inveta_stdev_min grid.
-
-    Parameters
-    ----------
-
-    simbasedir : str
-        The input directory of fake LCs.
-
-    magbinmedian : float
-        The magbin to run the variable recovery for. This is an item from the
-        dict from `simbasedir/fakelcs-info.pkl: `fakelcinfo['magrms'][magcol]`
-        list for each magcol and designates which magbin to get the recovery
-        stats for.
-
-    stetson_stdev_min : float
-        The minimum sigma above the trend in the Stetson J variability index
-        distribution for this magbin to use to consider objects as variable.
-
-    inveta_stdev_min : float
-        The minimum sigma above the trend in the 1/eta variability index
-        distribution for this magbin to use to consider objects as variable.
-
-    iqr_stdev_min : float
-        The minimum sigma above the trend in the IQR variability index
-        distribution for this magbin to use to consider objects as variable.
-
-    statsonly : bool
-        If this is True, only the final stats will be returned. If False, the
-        full arrays used to generate the stats will also be returned.
-
-    Returns
-    -------
-
-    dict
-        The returned dict contains statistics for this magbin and if requested,
-        the full arrays used to calculate the statistics.
-
-    """
-    
     
     
     with open(os.path.join(simbasedir, 'fakelcs-info.pkl'), 'rb') as infd:
